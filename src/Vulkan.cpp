@@ -268,7 +268,7 @@ namespace VulkanModule {
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 		appInfo.pApplicationName = "Test Game";
 		appInfo.applicationVersion = VK_MAKE_VERSION(1,0,0);
-		appInfo.pEngineName = "Cramgine";
+		appInfo.pEngineName = "Crispy Enigma";
 		appInfo.engineVersion = VK_MAKE_VERSION(1,0,0);
 		appInfo.apiVersion = VK_API_VERSION_1_0;
 

@@ -1,0 +1,15 @@
+
+Vulkan:
+
+Notes:
+Setup VMats to be materials, rather than just shader pipelines (possibly rename to VShaders? and have that referenced by VMats?)
+
+TODO:
+
++ Vulkan - (done, but needs further testing with when transforms exist)
++ Setup component system
++ Setup transforms
++ Seperate camera object rather than the one made inside the Vulkan.cpp somewhere
++ lighting
++ more materials
++ improve scripts to work with logic loop

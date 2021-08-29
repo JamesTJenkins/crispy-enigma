@@ -1,0 +1,8 @@
+Debug/*
+bin/*
+build/*
+.vscode/*
+assets/textures/*
+assets/models/*
+assets/shaders/compile.bat
+makefile

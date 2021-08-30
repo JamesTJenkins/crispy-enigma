@@ -2,13 +2,13 @@
 #include <gtx/quaternion.hpp>
 
 namespace Components {
-    class Transform {
+    struct Transform {
     public:
+		Transform(const glm::vec3 position = glm::vec3(0,0,0), const glm::quat rotation = glm::quat(), const glm::vec3 scale = glm::vec3(1,1,1));
+
         glm::vec3 position;
         glm::quat rotation;
         glm::vec3 scale;
-
-        Transform(const glm::vec3& position = glm::vec3(0,0,0), const glm::quat& rotation = glm::quat(), const glm::vec3& scale = glm::vec3(1,1,1));
 
 		glm::mat4 LocalToWorldMatrix() const;
 

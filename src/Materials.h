@@ -3,7 +3,7 @@
 #include <vector>
 #include<vulkan/vulkan.h>
 
-namespace Materials {
+namespace Data {
     struct Texture {
         int width;
         int height;

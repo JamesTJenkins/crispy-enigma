@@ -1,15 +1,20 @@
 
-Vulkan:
-
-Notes:
+Vulkan Notes:
 Setup VMats to be materials, rather than just shader pipelines (possibly rename to VShaders? and have that referenced by VMats?)
+
+Object manager notes:
+Could switch from sting ids to hashed string ids, so still input readable and memorable ids but not lose out on a small amount of performance
 
 TODO:
 
 + Vulkan - (done, but needs further testing with when transforms exist)
-+ Setup component system
-+ Setup transforms
++ Setup component system - (Done, entt covers it)
++ Create basic components
++ Make meshRenderer components interact with vulkan
++ Add renderables back when creating meshRenderComponents and set them up when adding the component to an entity or possibly scrap them and replace with just the meshRenderer component setup
 + Seperate camera object rather than the one made inside the Vulkan.cpp somewhere
 + lighting
 + more materials
 + improve scripts to work with logic loop
++ Remove euler angles?
++ Do licencing (Done)

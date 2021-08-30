@@ -1,5 +1,4 @@
 #define SDL_MAIN_HANDLED
-
 #include "CrispyEnigma.h"
 #include "Engine.h"
 #include "TestGame.h"

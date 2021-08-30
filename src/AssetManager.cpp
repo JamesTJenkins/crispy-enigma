@@ -1,4 +1,4 @@
-#include"ObjectManager.h"
+#include"AssetManager.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
 
@@ -6,70 +6,62 @@
 #include <unordered_map>
 
 namespace Manager {
-    ObjectManager::ObjectManager(){
+    AssetManager::AssetManager(){
 
     }
 
-    ObjectManager::~ObjectManager(){
+    AssetManager::~AssetManager(){
 
     }
 
-    void ObjectManager::AddNewTexture(std::string name, std::string path, uint32_t mipLevels){
-        Materials::Texture tex;
+    void AssetManager::AddNewTexture(std::string name, std::string path, uint32_t mipLevels){
+        Data::Texture tex;
 		tex.texturePath = path;
         tex.mipLevels = mipLevels;
 
         loadedTextures[name] = tex;
     }
 
-    void ObjectManager::AddNewShader(std::string name, std::string vertexShaderPath, std::string fragmentShaderPath){
-        Materials::Shader shader;
+    void AssetManager::AddNewShader(std::string name, std::string vertexShaderPath, std::string fragmentShaderPath){
+        Data::Shader shader;
         shader.vertexShader = vertexShaderPath;
         shader.fragmentShader = fragmentShaderPath;
 
         loadedShaders[name] = shader;
     }
 
-    void ObjectManager::AddNewMaterial(std::string name, std::string textureName, std::string shaderName){
-        Materials::Material mat;
+    void AssetManager::AddNewMaterial(std::string name, std::string textureName, std::string shaderName){
+        Data::Material mat;
         mat.albedo = textureName;
         mat.shader = shaderName;
 
         loadedMaterials[name] = mat;
     }
 
-    void ObjectManager::AddNewMeshObject(std::string name, std::string path){
-        Mesh::MeshObject obj;
-        obj.objectPath = path;
+    void AssetManager::AddNewMesh(std::string name, std::string path){
+        Data::Mesh mesh;
+        mesh.meshPath = path;
 
-        LoadModel(&obj);
+        LoadModel(&mesh);
 
-        loadedMeshObjects[name] = obj;
+        loadedMeshes[name] = mesh;
     }
 
-    void ObjectManager::AddObject(std::string meshName, std::string materialName){
-        Object obj;
-        obj.mesh = meshName;
-        obj.material = materialName;
-
-        loadedObjects.push_back(obj);
-    }
-
-    void ObjectManager::LoadModel(Mesh::MeshObject* meshObject){
+    void AssetManager::LoadModel(Data::Mesh* mesh){
         tinyobj::attrib_t attrib;
         std::vector<tinyobj::shape_t> shapes;
         std::vector<tinyobj::material_t> materials;
         std::string warn, err;
 
-        if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, meshObject->objectPath.c_str())){
+        if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, mesh->meshPath.c_str())){
             throw std::runtime_error(warn + err);
         }
         
-        std::unordered_map<Mesh::Vertex, uint32_t> uniqueVertices{};
+        std::unordered_map<Data::Vertex, uint32_t> uniqueVertices{};
 
         for(const auto& shape : shapes){
             for(const auto& index : shape.mesh.indices){
-                Mesh::Vertex vertex{};
+                Data::Vertex vertex{};
 
                 vertex.pos = {
                     attrib.vertices[3 * index.vertex_index + 0],
@@ -86,11 +78,11 @@ namespace Manager {
                 vertex.color = { 1.0f, 1.0f, 1.0f };
 
                 if (uniqueVertices.count(vertex) == 0){
-                    uniqueVertices[vertex] = static_cast<uint32_t>(meshObject->vertices.size());
-                    meshObject->vertices.push_back(vertex);
+                    uniqueVertices[vertex] = static_cast<uint32_t>(mesh->vertices.size());
+                    mesh->vertices.push_back(vertex);
                 }
 
-                meshObject->indices.push_back(uniqueVertices[vertex]);
+                mesh->indices.push_back(uniqueVertices[vertex]);
             }
         }
     }

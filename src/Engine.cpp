@@ -77,16 +77,15 @@ namespace Engine {
 
 	void Engine::LoadData(){
 		// TESTING
-		root.objectManager.AddNewTexture("test", "assets/textures/test.jpg", 2);
-		root.objectManager.AddNewMeshObject("cube", "assets/models/Cube.obj");
-		root.objectManager.AddNewShader("test", "assets/shaders/vert.spv", "assets/shaders/frag.spv");
-		root.objectManager.AddNewMaterial("testMat", "test", "test");
-		root.objectManager.AddObject("cube", "testMat");
+		root.assetManager.AddNewTexture("test", "assets/textures/test.jpg", 2);
+		root.assetManager.AddNewMesh("cube", "assets/models/Cube.obj");
+		root.assetManager.AddNewShader("test", "assets/shaders/vert.spv", "assets/shaders/frag.spv");
+		root.assetManager.AddNewMaterial("testMat", "test", "test");
 	}
 
 	void Engine::InitVulkan() {
 		// Setup vulkan
-		root.vulkan.InitVulkan(&root.sdl2, &root.objectManager);
+		root.vulkan.InitVulkan(&root.sdl2, &root.assetManager);
 		// Create vulkan window
 		root.vulkan.CreateVulkanWindow("Test");
 		// Create instance
@@ -109,7 +108,7 @@ namespace Engine {
 		root.vulkan.CreateDescriptorSetLayout();
 
 		// Create graphics pipeline for each shader
-		for (auto& shader : root.objectManager.loadedShaders){
+		for (auto& shader : root.assetManager.loadedShaders){
 			root.vulkan.CreateGraphicsPipeline(shader.first.c_str());
 		}
 
@@ -123,19 +122,14 @@ namespace Engine {
 		root.vulkan.CreateFramebuffers();
 
 		// Cycle through all textures
-		for (auto& tex : root.objectManager.loadedTextures){
+		for (auto& tex : root.assetManager.loadedTextures){
 			root.vulkan.CreateVTexture(tex.first.c_str());
 		}
 
-		// Cycle through all mesh objects
-		for (auto& object : root.objectManager.loadedMeshObjects){
+		// Cycle through all mesh assets
+		for (auto& asset : root.assetManager.loadedMeshes){
 			// Create VMeshes
-			root.vulkan.CreateVMesh(object.first.c_str());
-		}
-
-		// Create all renderables
-		for (auto& obj : root.objectManager.loadedObjects){
-			root.vulkan.CreateRenderable(root.vulkan.GetVMesh(obj.mesh), root.vulkan.GetVShader(root.objectManager.loadedMaterials[obj.material].shader));
+			root.vulkan.CreateVMesh(asset.first.c_str());
 		}
 
 		// Create uniform buffer

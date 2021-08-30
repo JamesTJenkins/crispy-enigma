@@ -24,10 +24,10 @@ namespace VulkanModule {
 		
 	}
 
-	void Vulkan::InitVulkan(SDLModule::SDL2* _sdl2, Manager::ObjectManager* _objectManager) {
+	void Vulkan::InitVulkan(SDLModule::SDL2* _sdl2, Manager::AssetManager* _assetManager) {
 		// assign pointers
 		sdl2 = _sdl2;
-		objectManager = _objectManager;
+		assetManager = _assetManager;
 
 		// Get extension count
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
@@ -159,7 +159,7 @@ namespace VulkanModule {
 		CreateRenderPass();
 
 		// Regenerate graphics pipeline for each shader
-		for (auto& shader : objectManager->loadedShaders){
+		for (auto& shader : assetManager->loadedShaders){
 			CreateGraphicsPipeline(shader.first.c_str());
 		}
 
@@ -648,7 +648,7 @@ namespace VulkanModule {
 	void Vulkan::CreateGraphicsPipeline(const char* shaderName){
 		// Create vShader which will hold pipelines used to render objects of this shader
 		VShader vShader;
-		Materials::Shader* shader = &objectManager->loadedShaders[shaderName];
+		Data::Shader* shader = &assetManager->loadedShaders[shaderName];
 		vShader.id = vShaderCount;
 		vShaderCount++;
 		
@@ -685,8 +685,8 @@ namespace VulkanModule {
 
 		// Vertex buffer
 
-		auto bindingDescription = Mesh::Vertex::GetBindingDescription();
-		auto attributeDescriptions = Mesh::Vertex::GetAttributeDescriptions();
+		auto bindingDescription = Data::Vertex::GetBindingDescription();
+		auto attributeDescriptions = Data::Vertex::GetAttributeDescriptions();
 
 		vertexInputInfo.vertexBindingDescriptionCount = 1;
 		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
@@ -1095,7 +1095,7 @@ namespace VulkanModule {
 
 	void Vulkan::CreateVMesh(const char* meshName){
 		VMesh vm;
-		vm.meshRef = &objectManager->loadedMeshObjects[meshName];
+		vm.meshRef = &assetManager->loadedMeshes[meshName];
 
 		CreateVertexBuffer(&vm);
 		CreateIndexBuffer(&vm);
@@ -1283,7 +1283,7 @@ namespace VulkanModule {
 			VkDescriptorBufferInfo bufferInfo{};
 			bufferInfo.buffer = uniformBuffers[i];
 			bufferInfo.offset = 0;
-			bufferInfo.range = sizeof(Mesh::UniformBufferObject);
+			bufferInfo.range = sizeof(Data::UniformBufferObject);
 
 			for (auto& t : vTextures){
 				VkDescriptorImageInfo imageInfo{};
@@ -1315,7 +1315,7 @@ namespace VulkanModule {
 	}
 
 	void Vulkan::CreateUniformBuffers(){
-		VkDeviceSize bufferSize = sizeof(Mesh::UniformBufferObject);
+		VkDeviceSize bufferSize = sizeof(Data::UniformBufferObject);
 
 		uniformBuffers.resize(swapchainImages.size());
 		uniformBuffersMemory.resize(swapchainImages.size());
@@ -1333,7 +1333,7 @@ namespace VulkanModule {
 		float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 	
 		// Make it spin
-		Mesh::UniformBufferObject ubo{};
+		Data::UniformBufferObject ubo{};
 		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		// Set camera view
@@ -1354,7 +1354,7 @@ namespace VulkanModule {
 
 	void Vulkan::CreateVTexture(const char* textureName){
 		VTexture vTex;
-		vTex.textureRef = &objectManager->loadedTextures[textureName];
+		vTex.textureRef = &assetManager->loadedTextures[textureName];
 
 		// Create texture image
 		CreateTextureImage(&vTex);

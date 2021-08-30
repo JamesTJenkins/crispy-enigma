@@ -9,7 +9,7 @@
 #include<array>
 #include<iostream>
 
-namespace Mesh {
+namespace Data {
     struct Vertex {
         glm::vec3 pos;
         glm::vec3 color;
@@ -29,18 +29,18 @@ namespace Mesh {
         glm::mat4 proj;
     };
 
-    struct MeshObject {
+    struct Mesh {
         // Mesh object
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
 
-        std::string objectPath;
+        std::string meshPath;
     };
 }
 
 namespace std {
-    template<> struct hash<Mesh::Vertex> {
-        size_t operator()(Mesh::Vertex const& vertex) const {
+    template<> struct hash<Data::Vertex> {
+        size_t operator()(Data::Vertex const& vertex) const {
             return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
         }
     };

@@ -1,6 +1,6 @@
 #include"Mesh.h"
 
-namespace Mesh{
+namespace Data {
     // Tells vulkan how to pass the vertex data
     VkVertexInputBindingDescription Vertex::GetBindingDescription(){
         VkVertexInputBindingDescription bindingDescription{};

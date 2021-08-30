@@ -4,7 +4,7 @@
 #include <optional>
 #include <unordered_map>
 #include "SDL2.h"
-#include "ObjectManager.h"
+#include "AssetManager.h"
 
 namespace VulkanModule {
     struct QueueFamilyIndices {
@@ -26,7 +26,7 @@ namespace VulkanModule {
     };
 
     struct VMesh {
-        Mesh::MeshObject* meshRef;
+        Data::Mesh* meshRef;
 
         VkBuffer vertexBuffer;
         VkDeviceMemory vertexBufferMemory;
@@ -41,7 +41,7 @@ namespace VulkanModule {
     };
 
     struct VTexture {
-        Materials::Texture* textureRef;
+        Data::Texture* textureRef;
 
         VkImage textureImage;
         VkDeviceMemory textureImageMemory;
@@ -59,7 +59,7 @@ namespace VulkanModule {
         Vulkan();
         ~Vulkan();
 
-        void InitVulkan(SDLModule::SDL2* _sdl2, Manager::ObjectManager* _objectManager);
+        void InitVulkan(SDLModule::SDL2* _sdl2, Manager::AssetManager* _assetManager);
         void DrawFrame();
 
         void SetWindowSize(int width, int height);
@@ -154,7 +154,7 @@ namespace VulkanModule {
         void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
     private:
         SDLModule::SDL2 *sdl2;
-        Manager::ObjectManager *objectManager;
+        Manager::AssetManager *assetManager;
 
         const size_t MAX_FRAMES_IN_FLIGHT = 2;
         size_t currentFrame = 0;

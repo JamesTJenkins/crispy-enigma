@@ -1,14 +1,8 @@
 #include "Camera.h"
 
 namespace Components {
-	Camera::Camera(const Transform* transform, const float aspect, const float fov, const float nearPlane, const float farPlane, const bool isOrthographic) : aspect(aspect), fov(fov), nearPlane(nearPlane), farPlane(farPlane) {
-		if (!isOrthographic) {
-			isOrthagraphic = true;
-			projectionMatrix = glm::ortho(fov, aspect, nearPlane, farPlane);
-		} else {
-			transformComponent = transform;
-			projectionMatrix = glm::perspective(fov, aspect, nearPlane, farPlane);
-		}
+	Camera::Camera(const float aspect, const float fov, const float nearPlane, const float farPlane, const bool isOrtographic, Transform* transform) : aspect(aspect), fov(fov), nearPlane(nearPlane), farPlane(farPlane), transformComponent(transform){
+		CreateCamera();
 	}
 
 	glm::mat4 Camera::GetViewMatrix() const {
@@ -23,12 +17,21 @@ namespace Components {
 		return projectionMatrix;
 	}
 
+	void Camera::CreateCamera() {
+		if (!isOrthographic) {
+			isOrthographic = true;
+			projectionMatrix = glm::ortho(fov, aspect, nearPlane, farPlane);
+		} else {
+			projectionMatrix = glm::perspective(fov, aspect, nearPlane, farPlane);
+		}
+	}
+
 	void Camera::SwapPerspective() {
-		if (isOrthagraphic) {
-			isOrthagraphic = false;
+		if (isOrthographic) {
+			isOrthographic = false;
 			projectionMatrix = glm::perspective(fov, aspect, nearPlane, farPlane);
 		} else {
-			isOrthagraphic = true;
+			isOrthographic = true;
 			projectionMatrix = glm::ortho(fov, aspect, nearPlane, farPlane);
 		}
 	}

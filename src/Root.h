@@ -2,7 +2,8 @@
 #include <cstdint>
 #include "Vulkan.h"
 #include "SDL2.h"
-#include "ObjectManager.h"
+#include "AssetManager.h"
+#include "Scene.h"
 
 class Root {
 public:
@@ -14,5 +15,7 @@ public:
     // Vulkan
     VulkanModule::Vulkan vulkan;
     // Object manager
-    Manager::ObjectManager objectManager;
+    Manager::AssetManager assetManager;
+    // Loaded scene
+    Scenes::Scene activeScene;
 };

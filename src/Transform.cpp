@@ -2,7 +2,8 @@
 #include <gtx/transform.hpp>
 
 namespace Components {
-    Transform::Transform(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& scale) : position(position), rotation(rotation), scale(scale) {
+	Transform::Transform(const glm::vec3 position, const glm::quat rotation, const glm::vec3 scale) : position(position), rotation(rotation), scale(scale) {
+		// Gets euler angles
 		eulerAngles = glm::eulerAngles(rotation) * 3.14159f / 180.0f;
 	}
 

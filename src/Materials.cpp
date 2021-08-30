@@ -1,7 +1,7 @@
 #include "Materials.h"
 #include <fstream>
 
-namespace Materials{
+namespace Data {
     std::vector<char> Shader::ReadBinaryFile(const std::string& filename) {
 		std::ifstream file(filename, std::ios::ate | std::ios::binary);
 

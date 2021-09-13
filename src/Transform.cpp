@@ -1,6 +1,10 @@
 #include "Transform.h"
 
 namespace Components {
+    Transform::Transform(glm::mat4 _transform) : transform(_transform) {
+
+    }
+
 	glm::vec3 Transform::GetPosition() {
         return glm::vec3(transform[3]);
     }

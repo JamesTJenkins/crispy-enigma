@@ -5,7 +5,7 @@
 #include "Root.h"
 
 namespace Scenes {
-    Scene::Scene() {
+    Scene::Scene(Root* _root) : root(_root) {
         /*  EXAMPLE OF CREATING ENTITY (https://youtu.be/D4hz0wEB978?t=1589) got here for more stuffs
         entt::entity entity = mRegistry.create();
         mRegistry.emplace<Components::Transform>(entity, glm::vec3(1,1,1));
@@ -15,10 +15,6 @@ namespace Scenes {
     Scene::~Scene() {
         
     } 
-
-    void Scene::InitScene(Root* _root){
-        root = _root;
-    }
 
     void Scene::UpdateScene(){
         
@@ -49,12 +45,12 @@ namespace Scenes {
 		root->assetManager.AddNewMaterial("testMat", "test", "test");
 
         entt::entity camEntity = mRegistry.create();
-        Components::Transform camTransform = mRegistry.emplace<Components::Transform>(camEntity);
-        Components::Camera cam = mRegistry.emplace<Components::Camera>(camEntity, 1920/1080, 45.0f, 0.1f, 100.0f, false, &camTransform);
-        activeCamera = &cam;
+        Components::Transform* camTransform = &mRegistry.emplace<Components::Transform>(camEntity);
+        Components::Camera* cam = &mRegistry.emplace<Components::Camera>(camEntity, 1920/1080, 45.0f, 0.1f, 100.0f, false, camTransform);
+        activeCamera = cam;
         
         entt::entity entity = mRegistry.create();
-        Components::MeshRenderer mr = mRegistry.emplace<Components::MeshRenderer>(entity, "cube", "testMat");
+        mRegistry.emplace<Components::MeshRenderer>(entity, "cube", "testMat");
         mRegistry.emplace<Components::Transform>(entity);
 
 

@@ -1,9 +1,10 @@
 #include "VulkanUniformBuffer.h"
 
+#include "Root.h"
 #include "Mesh.h"
 
 namespace VulkanModule {
-    VulkanUniformBuffer::VulkanUniformBuffer(VulkanDevice* device, VulkanSwapchain* swapchain, VulkanBuffer* buffer) : vDevice(device), vSwapchain(swapchain), vBuffer(buffer) {
+    VulkanUniformBuffer::VulkanUniformBuffer(Root* _root, VulkanDevice* device, VulkanSwapchain* swapchain, VulkanBuffer* buffer) : root(_root), vDevice(device), vSwapchain(swapchain), vBuffer(buffer) {
 
     }
 
@@ -25,6 +26,16 @@ namespace VulkanModule {
 	void VulkanUniformBuffer::UpdateUniformBuffer(uint32_t currentImage){
 		// Modify ubo here
 		Data::UniformBufferObject ubo{};
+
+        // Set to camera transform
+        ubo.model = root->activeScene.activeCamera->transformComponent->transform;
+        // Set to camera view settings
+        ubo.view = root->activeScene.activeCamera->GetViewMatrix();
+        // Set to camera projection setttings
+        ubo.proj = root->activeScene.activeCamera->GetProjectionMatrix();
+
+        // Flip Y coord as its wrong in vulkan
+        ubo.proj[1][1] *= -1;
 
 		// Copy data into buffer
 		void* data;

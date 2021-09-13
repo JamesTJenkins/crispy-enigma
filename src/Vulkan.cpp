@@ -4,7 +4,7 @@
 #include "Root.h"
 
 namespace VulkanModule {
-    Vulkan::Vulkan(Root* _root) : root(_root), vWindow(_root), vInstance(_root), vSurface(root, &vInstance), vDevice(&vInstance, &vSurface), vSwapchain(root, &vDevice, &vSurface), vImageView(&vDevice, &vSwapchain), vRenderPass(&vDevice, &vSwapchain, &vImageView), vDescriptor(&vDevice, &vSwapchain), vFramebuffer(_root, &vDevice, &vSwapchain, &vImageView, &vRenderPass), vCommandbuffer(&vDevice, &vSwapchain, &vRenderPass, &vFramebuffer), vBuffer(&vDevice, &vCommandbuffer), vImage(&vDevice, &vCommandbuffer, &vBuffer), vResources(&vDevice, &vSwapchain, &vFramebuffer, &vImageView, &vImage), vUniformBuffer(&vDevice, &vSwapchain, &vBuffer), vSync(&vDevice, &vSwapchain, &MAX_FRAMES_IN_FLIGHT), vPipeline(_root, &vDevice, &vSwapchain, &vRenderPass, &vDescriptor) {
+    Vulkan::Vulkan(Root* _root) : root(_root), vWindow(_root), vInstance(_root), vSurface(root, &vInstance), vDevice(&vInstance, &vSurface), vSwapchain(root, &vDevice, &vSurface), vImageView(&vDevice, &vSwapchain), vRenderPass(&vDevice, &vSwapchain, &vImageView), vDescriptor(&vDevice, &vSwapchain, &vUniformBuffer), vFramebuffer(_root, &vDevice, &vSwapchain, &vImageView, &vRenderPass), vCommandbuffer(&vDevice, &vSwapchain, &vRenderPass, &vFramebuffer), vBuffer(&vDevice, &vCommandbuffer), vImage(&vDevice, &vCommandbuffer, &vBuffer), vResources(&vDevice, &vSwapchain, &vFramebuffer, &vImageView, &vImage), vUniformBuffer(_root, &vDevice, &vSwapchain, &vBuffer), vSync(&vDevice, &vSwapchain, &MAX_FRAMES_IN_FLIGHT), vPipeline(_root, &vDevice, &vSwapchain, &vRenderPass, &vDescriptor) {
         // Get extension count
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
 

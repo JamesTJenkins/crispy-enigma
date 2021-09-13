@@ -6,10 +6,9 @@
 namespace Scenes {
     class Scene {
     public:
-        Scene();
+        Scene(Root* _root);
         ~Scene();
-
-        void InitScene(Root* _root);
+        
         void UpdateScene();
 
         //void RecreateVulkanBuffers();
@@ -19,9 +18,10 @@ namespace Scenes {
         void LoadData();
         void PrintLoadedDataStats();
         int GetEntityCount();
+
+        Components::Camera* activeCamera = nullptr;
     private:
         Root* root;
-        Components::Camera* activeCamera;
         // Holds component data, and entity ids
         entt::registry mRegistry;
     };

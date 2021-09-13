@@ -57,7 +57,6 @@ namespace Engine {
 		root.vulkan.InitVulkan();
 
 		// Load Data
-		root.activeScene.InitScene(&root);
 		root.activeScene.LoadData();
 
 		std::cout << "Loaded Scene, Entity count: " << root.activeScene.GetEntityCount() << std::endl;

@@ -2,6 +2,7 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 
+#include "Root.fwd.h"
 #include "VulkanDevice.h"
 #include "VulkanSwapchain.h"
 #include "VulkanBuffer.h"
@@ -10,7 +11,7 @@ namespace VulkanModule {
     class VulkanUniformBuffer {
     public:
         // Constructors
-        VulkanUniformBuffer(VulkanDevice* device, VulkanSwapchain* swapchain, VulkanBuffer* buffer);
+        VulkanUniformBuffer(Root* _root, VulkanDevice* device, VulkanSwapchain* swapchain, VulkanBuffer* buffer);
         ~VulkanUniformBuffer();
 
         // Create uniform buffers
@@ -26,6 +27,7 @@ namespace VulkanModule {
         std::vector<VkDeviceMemory> uniformBuffersMemory;
     private:
         // References
+        Root* root;
         VulkanDevice* vDevice;
         VulkanSwapchain* vSwapchain;
         VulkanBuffer* vBuffer;

@@ -1,6 +1,6 @@
 #include "Root.h"
 
-Root::Root() : vulkan(this), assetManager(this) {
+Root::Root() : vulkan(this), assetManager(this), activeScene(this) {
     
 }
 

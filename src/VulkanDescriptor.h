@@ -4,12 +4,13 @@
 
 #include "VulkanDevice.h"
 #include "VulkanSwapchain.h"
+#include "VulkanUniformBuffer.h"
 
 namespace VulkanModule {
     class VulkanDescriptor {
     public:
         // Constructors
-        VulkanDescriptor(VulkanDevice* device, VulkanSwapchain* swapchain);
+        VulkanDescriptor(VulkanDevice* device, VulkanSwapchain* swapchain, VulkanUniformBuffer* uniformbuffer);
         ~VulkanDescriptor();
 
         // Creates the descriptor set layout
@@ -32,5 +33,6 @@ namespace VulkanModule {
         // References
         VulkanDevice* vDevice;
         VulkanSwapchain* vSwapchain;
+        VulkanUniformBuffer* vUniformbuffer;
     };
 }

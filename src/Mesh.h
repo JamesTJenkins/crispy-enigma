@@ -2,12 +2,12 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 
-#include<glm.hpp>
-#include<gtx/hash.hpp>
-#include<vulkan/vulkan.h>
-#include<vector>
-#include<array>
-#include<iostream>
+#include <vulkan/vulkan.h>
+#include <iostream>
+#include <vector>
+#include <array>
+#include <glm.hpp>
+#include <gtx/hash.hpp>
 
 namespace Data {
     struct Vertex {
@@ -33,8 +33,13 @@ namespace Data {
         // Mesh object
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
-
         std::string meshPath;
+
+        // Vulkan
+        VkBuffer vertexBuffer;
+        VkDeviceMemory vertexBufferMemory;
+        VkBuffer indexBuffer;
+        VkDeviceMemory indexBufferMemory;
     };
 }
 

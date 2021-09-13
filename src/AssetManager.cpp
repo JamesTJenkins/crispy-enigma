@@ -4,9 +4,10 @@
 
 #include <tiny_obj_loader.h>
 #include <unordered_map>
+#include "Root.h"
 
 namespace Manager {
-    AssetManager::AssetManager(){
+    AssetManager::AssetManager(Root* _root) : root(_root){
 
     }
 
@@ -18,7 +19,12 @@ namespace Manager {
         Data::Texture tex;
 		tex.texturePath = path;
         tex.mipLevels = mipLevels;
-
+        
+        // Initalize for vulkan
+        root->vulkan.vImage.CreateTextureImage(&tex);
+        root->vulkan.vImage.CreateTextureImageView(&tex);
+        root->vulkan.vImage.CreateTextureSampler(&tex);
+        
         loadedTextures[name] = tex;
     }
 
@@ -26,6 +32,9 @@ namespace Manager {
         Data::Shader shader;
         shader.vertexShader = vertexShaderPath;
         shader.fragmentShader = fragmentShaderPath;
+
+        // Init for vulkan
+        root->vulkan.vPipeline.CreateGraphicsPipeline(&shader);
 
         loadedShaders[name] = shader;
     }
@@ -44,7 +53,27 @@ namespace Manager {
 
         LoadModel(&mesh);
 
+        // Initalize for Vulkan
+        root->vulkan.vBuffer.CreateVertexBuffer(&mesh);
+        root->vulkan.vBuffer.CreateIndexBuffer(&mesh);
+
         loadedMeshes[name] = mesh;
+    }
+
+    void AssetManager::ClearAssetData(){
+        // Destroy all pipelines and clear from asset manager
+        root->vulkan.vPipeline.Cleanup();
+        loadedShaders.clear();
+        // Destroy all textures and clear from asset manager
+        root->vulkan.CleanupOldTextures();
+        loadedTextures.clear();
+        // Destroy all meshes and clear from asset manager
+        root->vulkan.CleanupOldMeshes();
+        loadedMeshes.clear();
+        // Clear from asset manager (only references)
+        loadedMaterials.clear();
+
+        std::cout << "Cleared asset data" << std::endl;
     }
 
     void AssetManager::LoadModel(Data::Mesh* mesh){

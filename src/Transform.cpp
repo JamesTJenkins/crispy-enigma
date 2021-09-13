@@ -1,69 +1,43 @@
 #include "Transform.h"
-#include <gtx/transform.hpp>
 
 namespace Components {
-	Transform::Transform(const glm::vec3 position, const glm::quat rotation, const glm::vec3 scale) : position(position), rotation(rotation), scale(scale) {
-		// Gets euler angles
-		eulerAngles = glm::eulerAngles(rotation) * 3.14159f / 180.0f;
-	}
+	glm::vec3 Transform::GetPosition() {
+        return glm::vec3(transform[3]);
+    }
 
-	glm::mat4 Transform::LocalToWorldMatrix() const {
-		glm::mat4 translationMatrix = glm::translate(position);
-		glm::mat4 rotationMatrix = glm::mat4_cast(rotation);
-		glm::mat4 scaleMatrix = glm::scale(scale);
+    glm::quat Transform::GetRotation() {
+        return glm::quat_cast(transform);
+    }
 
-		return translationMatrix * rotationMatrix * scaleMatrix;
-	}
+    glm::vec3 Transform::GetScale() {
+        glm::vec3 scale;
+        scale.x  = glm::length(glm::vec3(transform[0]));
+        scale.y  = glm::length(glm::vec3(transform[1]));
+        scale.z  = glm::length(glm::vec3(transform[2]));
+        return scale;
+    }
 
-	void Transform::Rotate(const glm::vec3& angles) {
-		eulerAngles = angles;
+    glm::vec3 Transform::Up() {
+        return GetRotation() * glm::vec3(0,1,0);
+    }
 
-		rotation = 
-			glm::angleAxis(glm::radians(angles.x), glm::vec3(1,0,0)) *
-			glm::angleAxis(glm::radians(angles.y), glm::vec3(0,1,0)) *
-			glm::angleAxis(glm::radians(angles.z), glm::vec3(0,0,1));
-	}
+    glm::vec3 Transform::Down(){
+        return GetRotation() * glm::vec3(0,-1,0);
+    }
 
-	void Transform::Rotate(const float x, const float y, const float z) {
-		eulerAngles = glm::vec3(x,y,z);
+    glm::vec3 Transform::Left(){
+        return GetRotation() * glm::vec3(1,0,0);
+    }
 
-		rotation = 
-			glm::angleAxis(glm::radians(x), glm::vec3(1,0,0)) *
-			glm::angleAxis(glm::radians(y), glm::vec3(0,1,0)) *
-			glm::angleAxis(glm::radians(z), glm::vec3(0,0,1));
-	}
+    glm::vec3 Transform::Right(){
+        return GetRotation() * glm::vec3(-1,0,0);
+    }
 
-	void Transform::RotateOnAxis(const float& angle, const glm::vec3& axis) {
-		rotation = glm::angleAxis(glm::radians(angle), axis);
+    glm::vec3 Transform::Forward(){
+        return GetRotation() * glm::vec3(0,0,1);
+    }
 
-		eulerAngles = glm::eulerAngles(rotation) * 3.14159f / 180.0f;
-	}
-
-	glm::vec3 Transform::Left() const {
-		return rotation * glm::vec3(1,0,0);
-	}
-
-	glm::vec3 Transform::Right() const {
-		return rotation * glm::vec3(-1,0,0);
-	}
-
-	glm::vec3 Transform::Up() const {
-		return rotation * glm::vec3(0,1,0);
-	}
-
-	glm::vec3 Transform::Down() const {
-		return rotation * glm::vec3(0,-1,0);
-	}
-
-	glm::vec3 Transform::Forward() const {
-		return rotation * glm::vec3(0,0,1);
-	}
-
-	glm::vec3 Transform::Back() const {
-		return rotation * glm::vec3(0,0,-1);
-	}
-
-	glm::vec3 Transform::GetEulerAngles() const {
-		return eulerAngles;
-	}
+    glm::vec3 Transform::Backward(){
+        return GetRotation() * glm::vec3(0,0,-1);
+    }
 }

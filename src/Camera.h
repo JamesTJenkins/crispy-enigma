@@ -21,6 +21,10 @@ namespace Components {
 
 		void CreateCamera();
 		void SwapPerspective();
+
+		void GetPosition();
+		void GetRotation();
+		void GetScale();
     private:
         glm::mat4 projectionMatrix;
     };

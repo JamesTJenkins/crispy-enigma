@@ -13,6 +13,8 @@ namespace SDLModule {
     void SDL2::InitSDL2() {
         // Initalizes SLD2
         SDL_Init(SDL_INIT_VIDEO);
+
+        std::cout << "SDL2 Initialized" << std::endl;
     }
 
     int SDL2::CreateWindow(const char *title, int x, int y, int width, int height, Uint32 flags) {

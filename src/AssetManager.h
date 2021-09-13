@@ -1,8 +1,10 @@
 #pragma once
 #include <vector>
 #include <unordered_map>
+
 #include "Materials.h"
 #include "Mesh.h"
+#include "Root.fwd.h"
 
 /*
     Object manager is just for importing and holding data for Vulkan to use
@@ -12,7 +14,7 @@
 namespace Manager {
     class AssetManager {
     public:
-        AssetManager();
+        AssetManager(Root* _root);
         ~AssetManager();
 
         // Functions
@@ -22,6 +24,7 @@ namespace Manager {
         void AddNewMesh(std::string name, std::string path);
 
         // Helper functions
+        void ClearAssetData();
         void LoadModel(Data::Mesh* mesh);
 
         // Objects
@@ -29,5 +32,7 @@ namespace Manager {
         std::unordered_map<std::string, Data::Texture> loadedTextures;
         std::unordered_map<std::string, Data::Mesh> loadedMeshes;
         std::unordered_map<std::string, Data::Material> loadedMaterials;
+    private:
+        Root* root;
     };
 }

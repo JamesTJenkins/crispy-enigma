@@ -2,6 +2,7 @@ Debug/*
 bin/*
 build/*
 .vscode/*
+ArchivedScripts/*
 assets/textures/*
 assets/models/*
 assets/shaders/compile.bat

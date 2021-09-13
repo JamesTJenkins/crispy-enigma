@@ -5,16 +5,29 @@ Setup VMats to be materials, rather than just shader pipelines (possibly rename 
 Object manager notes:
 Could switch from sting ids to hashed string ids, so still input readable and memorable ids but not lose out on a small amount of performance
 
+Scenes and vulkan
+
++ Scenes add to vector with meshRenderComponents (done, RenderData)
++ Sort the vector to load in order based off shader, possibly vector of a vector, each vector is a list based off the shader, should make creation of command buffer easier (Done, bufferObjects)
++ Bring back the original create command buffer and retrofit (Done)
+
 TODO:
 
-+ Vulkan - (done, but needs further testing with when transforms exist)
-+ Setup component system - (Done, entt covers it)
-+ Create basic components
++ fix vulkan pipeline cleanup as its throwing seg fault on launch (cause of framebuffer resized) and close
++ fix vulkan descriptors as textures currently are commented out
++ Add new texture, mesh, and shader loading back as i removed the previous implimentation
 + Make meshRenderer components interact with vulkan
 + Add renderables back when creating meshRenderComponents and set them up when adding the component to an entity or possibly scrap them and replace with just the meshRenderer component setup
 + Seperate camera object rather than the one made inside the Vulkan.cpp somewhere
 + lighting
 + more materials
 + improve scripts to work with logic loop
-+ Remove euler angles?
+
+Done things:
+
++ Add all the cleanups to vulkan parts (done)
++ Create basic components (done)
++ vulkan cleanup/Rewrite (done)
++ Vulkan - (done, but needs further testing with when transforms exist)
++ Setup component system - (Done, entt covers it)
 + Do licencing (Done)

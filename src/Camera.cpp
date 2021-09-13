@@ -6,11 +6,11 @@ namespace Components {
 	}
 
 	glm::mat4 Camera::GetViewMatrix() const {
-		return glm::lookAt(transformComponent->position, transformComponent->position + transformComponent->Forward(), transformComponent->Up());
+		return glm::lookAt(transformComponent->GetPosition(), transformComponent->GetPosition() + transformComponent->Forward(), transformComponent->Up());
 	}
 
 	glm::mat4 Camera::WorldToCameraMatrix() const {
-		return projectionMatrix * glm::lookAt(transformComponent->position, transformComponent->position + transformComponent->Forward(), transformComponent->Up());
+		return projectionMatrix * glm::lookAt(transformComponent->GetPosition(), transformComponent->GetPosition() + transformComponent->Forward(), transformComponent->Up());
 	}
 
 	glm::mat4 Camera::GetProjectionMatrix() const {
@@ -19,7 +19,6 @@ namespace Components {
 
 	void Camera::CreateCamera() {
 		if (!isOrthographic) {
-			isOrthographic = true;
 			projectionMatrix = glm::ortho(fov, aspect, nearPlane, farPlane);
 		} else {
 			projectionMatrix = glm::perspective(fov, aspect, nearPlane, farPlane);

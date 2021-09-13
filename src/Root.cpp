@@ -1,7 +1,7 @@
 #include "Root.h"
 
-Root::Root() {
-
+Root::Root() : vulkan(this), assetManager(this) {
+    
 }
 
 Root::~Root() {

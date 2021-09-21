@@ -34,7 +34,7 @@ namespace VulkanModule {
         ubo.proj = root->activeScene.activeCamera->GetProjectionMatrix();
         
         // Flip Y coord as its wrong in vulkan
-        ubo.proj[1][1] *= -1;
+        //ubo.proj[1][1] *= -1;
 
         // Copy data into buffer
         void* data;

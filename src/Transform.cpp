@@ -1,4 +1,5 @@
 #include "Transform.h"
+#include <gtx/transform.hpp>
 
 namespace Components {
     Transform::Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale) {
@@ -8,12 +9,14 @@ namespace Components {
     }
 
     void Transform::SetPosition(glm::vec3 position) {
+        translationMatrix = glm::translate(position);
+        /*
         translationMatrix = glm::mat4(
-            1.0f, 0.0f, 0.0f, position.x,
-            0.0f, 1.0f, 0.0f, position.y,
-            0.0f, 0.0f, 1.0f, position.z,
-            0.0f, 0.0f, 0.0f, 1.0f
-        );
+            1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+           position.x, position.y, position.z, 1.0f
+        );*/
 
         RecreateTransformMatrix();
     }
@@ -24,29 +27,32 @@ namespace Components {
     }
 
     void Transform::SetScale(glm::vec3 scale) {
-        translationMatrix = glm::mat4(
+        scaleMatrix = glm::scale (scale);
+        /*
+        scaleMatrix = glm::mat4(
             scale.x, 0.0f, 0.0f, 0.0f,
             0.0f, scale.y, 0.0f, 0.0f,
             0.0f, 0.0f, scale.z, 0.0f,
             0.0f, 0.0f, 0.0f, 1.0f
         );
+        */
 
         RecreateTransformMatrix();
     }
 
 	glm::vec3 Transform::GetPosition() {
-        return glm::vec3(transform[3]);
+        return glm::vec3(translationMatrix[3]);
     }
 
     glm::quat Transform::GetRotation() {
-        return glm::quat_cast(transform);
+        return glm::quat_cast(rotationMatrix);
     }
 
     glm::vec3 Transform::GetScale() {
         glm::vec3 scale;
-        scale.x  = glm::length(glm::vec3(transform[0]));
-        scale.y  = glm::length(glm::vec3(transform[1]));
-        scale.z  = glm::length(glm::vec3(transform[2]));
+        scale.x  = glm::length(glm::vec3(scaleMatrix[0]));
+        scale.y  = glm::length(glm::vec3(scaleMatrix[1]));
+        scale.z  = glm::length(glm::vec3(scaleMatrix[2]));
         return scale;
     }
 

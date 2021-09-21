@@ -49,13 +49,16 @@ namespace Scenes {
 		root->assetManager.AddNewShader("test", "assets/shaders/vert.spv", "assets/shaders/frag.spv");
 		root->assetManager.AddNewMaterial("testMat", "test", "test");
 
+        auto v = glm::highp_vec3 (0,0,0);
+        auto q = glm::quat(v);
+
         entt::entity camEntity = mRegistry.create();
-        Components::Transform* camTransform = &mRegistry.emplace<Components::Transform>(camEntity, glm::vec3(0,0,-10), glm::quat(), glm::vec3(1,1,1));
-        Components::Camera* cam = &mRegistry.emplace<Components::Camera>(camEntity, root->sdl2.width / root->sdl2.height, 45.0f, 0.1f, 100.0f, false, camTransform);
+        Components::Transform* camTransform = &mRegistry.emplace<Components::Transform>(camEntity, glm::vec3(0,0,-10), q, glm::vec3(1,1,1));
+        Components::Camera* cam = &mRegistry.emplace<Components::Camera>(camEntity, (float)root->sdl2.width / root->sdl2.height, glm::quarter_pi<float>(), 0.1f, 100.0f, false, camTransform);
         activeCamera = cam;
         
         entt::entity entity = mRegistry.create();
-        mRegistry.emplace<Components::Transform>(entity, glm::vec3(0,0,0), glm::quat(), glm::vec3(1,1,1));
+        mRegistry.emplace<Components::Transform>(entity, glm::vec3(0,0,0), q, glm::vec3(1,1,1));
         mRegistry.emplace<Components::MeshRenderer>(entity, "cube", "testMat");
 
         // Rebuild

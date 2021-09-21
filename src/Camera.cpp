@@ -19,9 +19,9 @@ namespace Components {
 
 	void Camera::CreateCamera() {
 		if (!isOrthographic) {
-			projectionMatrix = glm::ortho(fov, aspect, nearPlane, farPlane);
-		} else {
 			projectionMatrix = glm::perspective(fov, aspect, nearPlane, farPlane);
+		} else {
+			projectionMatrix = glm::ortho(fov, aspect, nearPlane, farPlane);
 		}
 	}
 

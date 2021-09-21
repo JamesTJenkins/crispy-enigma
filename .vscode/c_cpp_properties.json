@@ -1,0 +1,47 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/src/**"
+            ],
+            "defines": [],
+            "compilerPath": "C:/msys64/mingw64/bin/clang++",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "clang-x64",
+            "compilerArgs": [
+                "-Wall",
+                "-Wextra",
+                "-Werror",
+                "-pedantic"
+            ]
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/src/**",
+                "C:/Dev/SDL2/include",
+                "C:/Dev/1.2.182.0/include",
+                "C:/Dev/glew/include",
+                "C:/Dev/glm/include",
+                "C:/Dev/nlohmannJson/include",
+                "C:/Dev/stb/include",
+                "C:/Dev/tinyobjloader/include",
+                "C:/Dev/entt-master/single_include/entt"
+            ],
+            "defines": [],
+            "compilerPath": "C:/msys64/mingw64/bin/clang++",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "clang-x64",
+            "compilerArgs": [
+                "-Wall",
+                "-Wextra",
+                "-Werror",
+                "-pedantic"
+            ]
+        }
+    ],
+    "version": 4
+}

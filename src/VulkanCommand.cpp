@@ -2,8 +2,10 @@
 #include <iostream>
 #include <array>
 
+#include "Root.h"
+
 namespace VulkanModule {
-    VulkanCommand::VulkanCommand(VulkanDevice* device, VulkanSwapchain* swapchain, VulkanRenderPass* renderpass, VulkanFrameBuffer* framebuffer) : vDevice(device), vSwapchain(swapchain), vRenderPass(renderpass), vFramebuffer(framebuffer) {
+    VulkanCommand::VulkanCommand(Root* _root, VulkanDevice* device, VulkanSwapchain* swapchain, VulkanRenderPass* renderpass, VulkanFrameBuffer* framebuffer) : root(_root), vDevice(device), vSwapchain(swapchain), vRenderPass(renderpass), vFramebuffer(framebuffer) {
 
     }
 
@@ -24,7 +26,7 @@ namespace VulkanModule {
 		}
 	}
 
-	void VulkanCommand::CreateCommandBuffers() {
+	void VulkanCommand::CreateCommandBuffers(std::vector<VkDescriptorSet> descriptorSets) {
 		commandBuffers.resize(vFramebuffer->swapchainFramebuffers.size());
 
 		VkCommandBufferAllocateInfo allocInfo{};
@@ -62,24 +64,33 @@ namespace VulkanModule {
 			// Will only use primary command buffer
 			vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-            /*
-			for (auto& objects : bufferObjects) {
+            int index = 0;
+			for (auto& rd : root->renderData) {
 				// Bind this to the graphics pipeline
-				vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, assetManager->loadedShaders[objects.first].graphicsPipeline);
+				vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, root->assetManager.loadedShaders[rd.first].graphicsPipeline);
 			
-				for (auto& obj : objects.second) {
+				for (auto& obj : rd.second) {
 					// Bind vertex and index buffer
-					VkBuffer vertexBuffers[] = { assetManager->loadedMeshes[obj.meshRenderer->meshRef].vertexBuffer };
+					VkBuffer vertexBuffers[] = { root->assetManager.loadedMeshes[obj.meshRenderer.meshRef].vertexBuffer };
 					VkDeviceSize offsets[] = { 0 };
 			
 					vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
-					vkCmdBindIndexBuffer(commandBuffers[i], assetManager->loadedMeshes[obj.meshRenderer->meshRef].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-					vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, assetManager->loadedShaders[objects.first].pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
-					// Draw
-					vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(assetManager->loadedMeshes[obj.meshRenderer->meshRef].indices.size()), 1, 0, 0, 0);
-				}
+					vkCmdBindIndexBuffer(commandBuffers[i], root->assetManager.loadedMeshes[obj.meshRenderer.meshRef].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+                    vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, root->assetManager.loadedShaders[rd.first].pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
+					
+                    // Create push constants
+                    PushConstants constants;
+                    constants.model = obj.transform;
+
+                    // Upload push constants
+                    vkCmdPushConstants(commandBuffers[i], root->assetManager.loadedShaders[rd.first].pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstants), &constants);
+                    
+                    // Draw
+					vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(root->assetManager.loadedMeshes[obj.meshRenderer.meshRef].indices.size()), 1, 0, 0, 0);
+				
+                    index++;
+                }
 			}
-            */
 
 			// End renderpass
 			vkCmdEndRenderPass(commandBuffers[i]);

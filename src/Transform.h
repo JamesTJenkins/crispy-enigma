@@ -8,9 +8,13 @@
 namespace Components {
     struct Transform {
     public:
-        Transform(glm::mat4 _transform = glm::mat4(0.0f));
+        Transform(glm::vec3 position = glm::vec3(0,0,0), glm::quat rotation = glm::quat(), glm::vec3 scale = glm::vec3(1,1,1));
 
 	    glm::mat4 transform;
+
+        void SetPosition(glm::vec3 position);
+        void SetRotation(glm::quat rotation);
+        void SetScale(glm::vec3 scale);
 
         glm::vec3 GetPosition();
         glm::quat GetRotation();
@@ -22,5 +26,11 @@ namespace Components {
         glm::vec3 Right();
         glm::vec3 Forward();
         glm::vec3 Backward();
+    private:
+        void RecreateTransformMatrix();
+
+        glm::mat4 translationMatrix;
+        glm::mat4 rotationMatrix;
+        glm::mat4 scaleMatrix;
     };
 }

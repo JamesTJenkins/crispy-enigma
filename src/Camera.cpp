@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 namespace Components {
-	Camera::Camera(const float aspect, const float fov, const float nearPlane, const float farPlane, const bool isOrtographic, Transform* transform) : aspect(aspect), fov(fov), nearPlane(nearPlane), farPlane(farPlane), transformComponent(transform){
+	Camera::Camera(const float aspect, const float fov, const float nearPlane, const float farPlane, const bool isOrthographic, Transform* transform) : aspect(aspect), fov(fov), nearPlane(nearPlane), farPlane(farPlane), isOrthographic(isOrthographic), transformComponent(transform){
 		CreateCamera();
 	}
 

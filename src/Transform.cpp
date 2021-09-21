@@ -1,8 +1,37 @@
 #include "Transform.h"
 
 namespace Components {
-    Transform::Transform(glm::mat4 _transform) : transform(_transform) {
+    Transform::Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale) {
+        SetPosition(position);
+        SetRotation(rotation);
+        SetScale(scale);
+    }
 
+    void Transform::SetPosition(glm::vec3 position) {
+        translationMatrix = glm::mat4(
+            1.0f, 0.0f, 0.0f, position.x,
+            0.0f, 1.0f, 0.0f, position.y,
+            0.0f, 0.0f, 1.0f, position.z,
+            0.0f, 0.0f, 0.0f, 1.0f
+        );
+
+        RecreateTransformMatrix();
+    }
+
+    void Transform::SetRotation(glm::quat rotation) {
+        rotationMatrix = glm::mat4_cast(rotation);
+        RecreateTransformMatrix();
+    }
+
+    void Transform::SetScale(glm::vec3 scale) {
+        translationMatrix = glm::mat4(
+            scale.x, 0.0f, 0.0f, 0.0f,
+            0.0f, scale.y, 0.0f, 0.0f,
+            0.0f, 0.0f, scale.z, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        );
+
+        RecreateTransformMatrix();
     }
 
 	glm::vec3 Transform::GetPosition() {
@@ -43,5 +72,9 @@ namespace Components {
 
     glm::vec3 Transform::Backward(){
         return GetRotation() * glm::vec3(0,0,-1);
+    }
+
+    void Transform::RecreateTransformMatrix() {
+        transform = translationMatrix * rotationMatrix * scaleMatrix;
     }
 }

@@ -111,8 +111,9 @@ namespace VulkanModule {
 			}
 		}
 
-		// Set physical device, and msaa
+		// Set physical device, limits, and msaa
 		physicalDevice = curr.second;
+        GetDeviceLimits();
 		msaaSamples = GetMaxUsableSampleCount();
 	}
 
@@ -212,10 +213,7 @@ namespace VulkanModule {
 	}
 
     VkSampleCountFlagBits VulkanDevice::GetMaxUsableSampleCount(){
-		VkPhysicalDeviceProperties physicalDeviceProperties;
-		vkGetPhysicalDeviceProperties(physicalDevice, &physicalDeviceProperties);
-
-		VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
+		VkSampleCountFlags counts = limits.framebufferColorSampleCounts & limits.framebufferDepthSampleCounts;
 
 		if (counts & VK_SAMPLE_COUNT_64_BIT)
 			return VK_SAMPLE_COUNT_64_BIT;
@@ -259,4 +257,10 @@ namespace VulkanModule {
 
 		return details;
 	}
+
+    void VulkanDevice::GetDeviceLimits() {
+        VkPhysicalDeviceProperties physicalDeviceProperties;
+        vkGetPhysicalDeviceProperties(physicalDevice, &physicalDeviceProperties);
+        limits = physicalDeviceProperties.limits;
+    }
 }

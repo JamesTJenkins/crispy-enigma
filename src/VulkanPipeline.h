@@ -11,6 +11,10 @@
 #include "VulkanDescriptor.h"
 
 namespace VulkanModule {
+    struct PushConstants {
+        glm::mat4 model;
+    };
+
     class VulkanPipeline {
     public:
         // Constructor

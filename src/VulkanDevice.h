@@ -44,6 +44,7 @@ namespace VulkanModule {
         QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
         VkSampleCountFlagBits GetMaxUsableSampleCount();
         SwapchainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
+        void GetDeviceLimits();
 
         // Variables
 
@@ -52,6 +53,7 @@ namespace VulkanModule {
         VkQueue graphicsQueue;
         VkQueue presentQueue;
         VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
+        VkPhysicalDeviceLimits limits;
 
     private:
         VulkanInstance* vInstance;

@@ -30,7 +30,7 @@ namespace VulkanModule {
 		appInfo.pEngineName = "Crispy Enigma";
 		appInfo.engineVersion = VK_MAKE_VERSION(1,0,0);
 		appInfo.apiVersion = VK_API_VERSION_1_0;
-
+        
         // Get SDL extensions
 		std::vector<const char*> SDLExtensions = GetSDLExtensions(root->sdl2.window);
 
@@ -49,7 +49,8 @@ namespace VulkanModule {
 			createInfo.ppEnabledLayerNames = validationLayers.data();
 			
 			PopulateDebugMessengerCreateInfo(debugCreateInfo);
-			createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
+			//createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo; FIX broke dunno gl, only with breakpoint debug works fine without
+            createInfo.pNext = nullptr;
 		} else {
 			createInfo.enabledLayerCount = 0;
 

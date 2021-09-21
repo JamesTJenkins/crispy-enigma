@@ -21,11 +21,16 @@ namespace Scenes {
     }
 
     void Scene::CreateAllRenderData(){
+        // In here probs due to the first error
+        root->renderData.clear();
         auto view = mRegistry.view<Components::MeshRenderer, Components::Transform>();
         
         // Create renderdata for all objects
         for (auto entity : view) {
-            //root->vulkan.AddRenderData(&mRegistry.get<Components::MeshRenderer>(entity), &mRegistry.get<Components::Transform>(entity));
+            VulkanModule::RenderData renderData;
+            renderData.meshRenderer = mRegistry.get<Components::MeshRenderer>(entity);
+            renderData.transform = mRegistry.get<Components::Transform>(entity).transform;
+            root->renderData[root->assetManager.loadedMaterials[renderData.meshRenderer.materialRef].shader].push_back(renderData);
         }
 
         // Rebuild Swapchain
@@ -45,18 +50,15 @@ namespace Scenes {
 		root->assetManager.AddNewMaterial("testMat", "test", "test");
 
         entt::entity camEntity = mRegistry.create();
-        Components::Transform* camTransform = &mRegistry.emplace<Components::Transform>(camEntity);
-        Components::Camera* cam = &mRegistry.emplace<Components::Camera>(camEntity, 1920/1080, 45.0f, 0.1f, 100.0f, false, camTransform);
+        Components::Transform* camTransform = &mRegistry.emplace<Components::Transform>(camEntity, glm::vec3(0,0,-10), glm::quat(), glm::vec3(1,1,1));
+        Components::Camera* cam = &mRegistry.emplace<Components::Camera>(camEntity, root->sdl2.width / root->sdl2.height, 45.0f, 0.1f, 100.0f, false, camTransform);
         activeCamera = cam;
         
         entt::entity entity = mRegistry.create();
+        mRegistry.emplace<Components::Transform>(entity, glm::vec3(0,0,0), glm::quat(), glm::vec3(1,1,1));
         mRegistry.emplace<Components::MeshRenderer>(entity, "cube", "testMat");
-        mRegistry.emplace<Components::Transform>(entity);
-
 
         // Rebuild
-        // Clear any data being held first
-        //root->vulkan.ClearRenderData();
         // Create all renderdata
         CreateAllRenderData();
         // Print off stats
@@ -68,6 +70,7 @@ namespace Scenes {
         std::cout << root->assetManager.loadedMeshes.size() << " mesh(es) loaded" << std::endl;
         std::cout << root->assetManager.loadedShaders.size() << " shader(s) loaded" << std::endl;
         std::cout << root->assetManager.loadedMaterials.size() << " material(s) loaded" << std::endl;
+        std::cout << root->renderData.size() << " renderable objects loaded" << std::endl;
     }
 
     int Scene::GetEntityCount(){

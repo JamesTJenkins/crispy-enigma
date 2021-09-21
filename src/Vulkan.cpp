@@ -4,7 +4,7 @@
 #include "Root.h"
 
 namespace VulkanModule {
-    Vulkan::Vulkan(Root* _root) : root(_root), vWindow(_root), vInstance(_root), vSurface(root, &vInstance), vDevice(&vInstance, &vSurface), vSwapchain(root, &vDevice, &vSurface), vImageView(&vDevice, &vSwapchain), vRenderPass(&vDevice, &vSwapchain, &vImageView), vDescriptor(&vDevice, &vSwapchain, &vUniformBuffer), vFramebuffer(_root, &vDevice, &vSwapchain, &vImageView, &vRenderPass), vCommandbuffer(&vDevice, &vSwapchain, &vRenderPass, &vFramebuffer), vBuffer(&vDevice, &vCommandbuffer), vImage(&vDevice, &vCommandbuffer, &vBuffer), vResources(&vDevice, &vSwapchain, &vFramebuffer, &vImageView, &vImage), vUniformBuffer(_root, &vDevice, &vSwapchain, &vBuffer), vSync(&vDevice, &vSwapchain, &MAX_FRAMES_IN_FLIGHT), vPipeline(_root, &vDevice, &vSwapchain, &vRenderPass, &vDescriptor) {
+    Vulkan::Vulkan(Root* _root) : root(_root), vWindow(_root), vInstance(_root), vSurface(root, &vInstance), vDevice(&vInstance, &vSurface), vSwapchain(root, &vDevice, &vSurface), vImageView(&vDevice, &vSwapchain), vRenderPass(&vDevice, &vSwapchain, &vImageView), vDescriptor(_root, &vDevice, &vSwapchain, &vUniformBuffer), vFramebuffer(_root, &vDevice, &vSwapchain, &vImageView, &vRenderPass), vCommandbuffer(_root, &vDevice, &vSwapchain, &vRenderPass, &vFramebuffer), vBuffer(&vDevice, &vCommandbuffer), vImage(&vDevice, &vCommandbuffer, &vBuffer), vResources(&vDevice, &vSwapchain, &vFramebuffer, &vImageView, &vImage), vUniformBuffer(_root, &vDevice, &vSwapchain, &vBuffer), vSync(&vDevice, &vSwapchain, &MAX_FRAMES_IN_FLIGHT), vPipeline(_root, &vDevice, &vSwapchain, &vRenderPass, &vDescriptor) {
         // Get extension count
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
 
@@ -30,16 +30,16 @@ namespace VulkanModule {
         vSwapchain.CreateSwapchain();
         vImageView.CreateImageViews();
         vRenderPass.CreateRenderPass();
-        vDescriptor.CreateDescriptorSetLayout();
+        vDescriptor.CreateEmptyDescriptorSetLayout();
         vPipeline.CreateAllGraphicPipelines();
         vCommandbuffer.CreateCommandPool();
         vResources.CreateColorResources();
         vResources.CreateDepthResources();
         vFramebuffer.CreateFramebuffers();
         vUniformBuffer.CreateUniformBuffers();
-        vDescriptor.CreateDescriptorPool();
-        vDescriptor.CreateDescriptorSets();
-        vCommandbuffer.CreateCommandBuffers();
+        vDescriptor.CreateEmptyDescriptorPool();
+        //vDescriptor.CreateDescriptorSets(); (This gets generated later)
+        vCommandbuffer.CreateCommandBuffers(vDescriptor.descriptorSets);
         vSync.CreateSyncObjects();
 
         std::cout << "Vulkan Initialized" << std::endl;
@@ -52,6 +52,9 @@ namespace VulkanModule {
 		// Get the image from the swapchain
 		uint32_t imageIndex;
 		VkResult result = vkAcquireNextImageKHR(vDevice.device, vSwapchain.swapchain, UINT64_MAX, vSync.imageAvailableSemaphore[currentFrame], VK_NULL_HANDLE, &imageIndex);
+
+        // Update command buffers per frame (probs just make it that a single buffer gets updated per frame rather than all)
+        vCommandbuffer.CreateCommandBuffers(vDescriptor.descriptorSets);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
 			WindowChanged();
@@ -150,6 +153,7 @@ namespace VulkanModule {
         vSwapchain.CreateSwapchain();
         vImageView.CreateImageViews();
         vRenderPass.CreateRenderPass();
+        vDescriptor.CreateDescriptorSetLayout();
         vPipeline.CreateAllGraphicPipelines();
         vResources.CreateColorResources();
         vResources.CreateDepthResources();
@@ -157,7 +161,7 @@ namespace VulkanModule {
         vUniformBuffer.CreateUniformBuffers();
         vDescriptor.CreateDescriptorPool();
         vDescriptor.CreateDescriptorSets();
-        vCommandbuffer.CreateCommandBuffers();
+        vCommandbuffer.CreateCommandBuffers(vDescriptor.descriptorSets);
 
         vSync.imagesInFlight.resize(vSwapchain.swapchainImages.size(), VK_NULL_HANDLE);
     }

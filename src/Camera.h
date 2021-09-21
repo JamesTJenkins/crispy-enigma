@@ -4,7 +4,7 @@
 namespace Components {
     struct Camera {
     public:
-		Camera(const float aspect, const float fov, const float nearPlane, const float farPlane, const bool isOrtographic, Transform* transform);
+		Camera(const float aspect, const float fov, const float nearPlane, const float farPlane, const bool isOrthographic, Transform* transform);
 
 		// Camera Settings
 		float aspect;

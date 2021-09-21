@@ -11,7 +11,6 @@ namespace Scenes {
         
         void UpdateScene();
 
-        //void RecreateVulkanBuffers();
         void CreateAllRenderData();
         void DrawMeshes();
 

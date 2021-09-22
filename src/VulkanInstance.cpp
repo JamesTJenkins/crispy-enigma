@@ -49,8 +49,7 @@ namespace VulkanModule {
 			createInfo.ppEnabledLayerNames = validationLayers.data();
 			
 			PopulateDebugMessengerCreateInfo(debugCreateInfo);
-			//createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo; FIX broke dunno gl, only with breakpoint debug works fine without
-            createInfo.pNext = nullptr;
+			createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
 		} else {
 			createInfo.enabledLayerCount = 0;
 

@@ -2,6 +2,7 @@
 #include <cstdint>
 #include "Vulkan.h"
 #include "SDL2.h"
+#include "InputManager.h"
 #include "AssetManager.h"
 #include "Scene.h"
 
@@ -17,6 +18,8 @@ public:
     // Vulkan
     VulkanModule::Vulkan vulkan;
     std::unordered_map<std::string, std::vector<VulkanModule::RenderData>> renderData;
+    // Input manager
+    Manager::InputManager inputManager;
     // Object manager
     Manager::AssetManager assetManager;
     // Loaded scene

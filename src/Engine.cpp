@@ -1,6 +1,8 @@
 #include "Engine.h"
 #include <iostream>
 
+#include "InputManager.h"
+
 namespace Engine {
 	Engine::Engine() {
 
@@ -34,6 +36,8 @@ namespace Engine {
 				}
 			}
 
+            // Handle inputs
+            root.inputManager.HandleKeyboardInput();
 			// Scene update
 			root.activeScene.UpdateScene();
 			// Rendering

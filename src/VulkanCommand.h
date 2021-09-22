@@ -19,6 +19,8 @@ namespace VulkanModule {
         void CreateCommandPool();
         // Create command buffers
         void CreateCommandBuffers(std::vector<VkDescriptorSet> descriptorSets);
+        // Update single buffer
+        void UpdateCommandBuffer(uint32_t imageIndex, std::vector<VkDescriptorSet> descriptorSets);
         // Begin single time commands
         VkCommandBuffer BeginSingleTimeCommands();
         // End single time commands

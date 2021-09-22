@@ -54,7 +54,7 @@ namespace VulkanModule {
 		VkResult result = vkAcquireNextImageKHR(vDevice.device, vSwapchain.swapchain, UINT64_MAX, vSync.imageAvailableSemaphore[currentFrame], VK_NULL_HANDLE, &imageIndex);
 
         // Update command buffers per frame (probs just make it that a single buffer gets updated per frame rather than all)
-        vCommandbuffer.CreateCommandBuffers(vDescriptor.descriptorSets);
+        vCommandbuffer.UpdateCommandBuffer(imageIndex, vDescriptor.descriptorSets);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
 			WindowChanged();

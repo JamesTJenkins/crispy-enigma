@@ -29,7 +29,26 @@ namespace Scenes {
             Components::Transform* transform = &mRegistry.get<Components::Transform>(entity);
             transform->SetRotation(glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
 
-            std::cout << transform->GetRotation().x << ", " << transform->GetRotation().y << ", " << transform->GetRotation().z << std::endl;
+            //std::cout << transform->GetRotation().x << ", " << transform->GetRotation().y << ", " << transform->GetRotation().z << std::endl;
+        }
+
+        // Update camera pos
+        if (root->inputManager.GetKeyState(SDL_SCANCODE_W)){
+            root->activeScene.activeCamera->transformComponent->SetPosition(root->activeScene.activeCamera->transformComponent->GetPosition() + ((glm::vec3(0,0,1) * time) * 0.00025f));
+        } else if (root->inputManager.GetKeyState(SDL_SCANCODE_S)){
+            root->activeScene.activeCamera->transformComponent->SetPosition(root->activeScene.activeCamera->transformComponent->GetPosition() + ((glm::vec3(0,0,-1) * time) * 0.00025f));
+        }
+
+        if (root->inputManager.GetKeyState(SDL_SCANCODE_A)){
+            root->activeScene.activeCamera->transformComponent->SetPosition(root->activeScene.activeCamera->transformComponent->GetPosition() + ((glm::vec3(-1,0,0) * time) * 0.00025f));
+        } else if (root->inputManager.GetKeyState(SDL_SCANCODE_D)){
+            root->activeScene.activeCamera->transformComponent->SetPosition(root->activeScene.activeCamera->transformComponent->GetPosition() + ((glm::vec3(1,0,0) * time) * 0.00025f));
+        }
+
+        if (root->inputManager.GetKeyState(SDL_SCANCODE_SPACE)){
+            root->activeScene.activeCamera->transformComponent->SetPosition(root->activeScene.activeCamera->transformComponent->GetPosition() + ((glm::vec3(0,1,0) * time) * 0.00025f));
+        } else if (root->inputManager.GetKeyState(SDL_SCANCODE_LCTRL)){
+            root->activeScene.activeCamera->transformComponent->SetPosition(root->activeScene.activeCamera->transformComponent->GetPosition() + ((glm::vec3(0,-1,0) * time) * 0.00025f));
         }
     }
 

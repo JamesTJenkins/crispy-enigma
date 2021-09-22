@@ -72,9 +72,9 @@ namespace VulkanModule {
 
 		VkViewport viewport{};
 		viewport.x = 0.0f;
-		viewport.y = 0.0f;
+		viewport.y = (float)vSwapchain->swapchainExtent.height;
 		viewport.width = (float)vSwapchain->swapchainExtent.width;
-		viewport.height = (float)vSwapchain->swapchainExtent.height;
+		viewport.height = -((float)vSwapchain->swapchainExtent.height);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 
@@ -121,7 +121,7 @@ namespace VulkanModule {
 		depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 		depthStencil.depthTestEnable = VK_TRUE;
 		depthStencil.depthWriteEnable = VK_TRUE;
-		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
 		depthStencil.depthBoundsTestEnable = VK_FALSE;
 		depthStencil.stencilTestEnable = VK_FALSE;
 
@@ -189,7 +189,6 @@ namespace VulkanModule {
 
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-        // FIX
 		if (vkCreateGraphicsPipelines(vDevice->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &shader->graphicsPipeline) != VK_SUCCESS){
 			throw std::runtime_error("Failed to create graphics pipeline.");
 		}

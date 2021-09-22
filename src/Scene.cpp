@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include <chrono>
 
 #include "Transform.h"
 #include "MeshRenderer.h"
@@ -17,7 +18,19 @@ namespace Scenes {
     } 
 
     void Scene::UpdateScene(){
+        // Make cubes spin
+        auto view = mRegistry.view<Components::MeshRenderer, Components::Transform>();
         
+        static auto startTime = std::chrono::high_resolution_clock::now();
+        auto currTime = std::chrono::high_resolution_clock::now();
+        float time = std::chrono::duration<float, std::chrono::seconds::period>(currTime - startTime).count();
+
+        for (auto entity : view) {
+            Components::Transform* transform = &mRegistry.get<Components::Transform>(entity);
+            transform->SetRotation(glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+
+            std::cout << transform->GetRotation().x << ", " << transform->GetRotation().y << ", " << transform->GetRotation().z << std::endl;
+        }
     }
 
     void Scene::CreateAllRenderData(){
@@ -28,9 +41,9 @@ namespace Scenes {
         // Create renderdata for all objects
         for (auto entity : view) {
             VulkanModule::RenderData renderData;
-            renderData.meshRenderer = mRegistry.get<Components::MeshRenderer>(entity);
-            renderData.transform = mRegistry.get<Components::Transform>(entity).transform;
-            root->renderData[root->assetManager.loadedMaterials[renderData.meshRenderer.materialRef].shader].push_back(renderData);
+            renderData.meshRenderer = &mRegistry.get<Components::MeshRenderer>(entity);
+            renderData.transform = &mRegistry.get<Components::Transform>(entity).transform;
+            root->renderData[root->assetManager.loadedMaterials[renderData.meshRenderer->materialRef].shader].push_back(renderData);
         }
 
         // Rebuild Swapchain
@@ -61,6 +74,10 @@ namespace Scenes {
         mRegistry.emplace<Components::Transform>(entity, glm::vec3(0,0,0), q, glm::vec3(1,1,1));
         mRegistry.emplace<Components::MeshRenderer>(entity, "cube", "testMat");
 
+        entt::entity entity2 = mRegistry.create();
+        mRegistry.emplace<Components::Transform>(entity2, glm::vec3(2,2,0), q, glm::vec3(1,1,1));
+        mRegistry.emplace<Components::MeshRenderer>(entity2, "cube", "testMat");
+
         // Rebuild
         // Create all renderdata
         CreateAllRenderData();
@@ -73,7 +90,7 @@ namespace Scenes {
         std::cout << root->assetManager.loadedMeshes.size() << " mesh(es) loaded" << std::endl;
         std::cout << root->assetManager.loadedShaders.size() << " shader(s) loaded" << std::endl;
         std::cout << root->assetManager.loadedMaterials.size() << " material(s) loaded" << std::endl;
-        std::cout << root->renderData.size() << " renderable objects loaded" << std::endl;
+        std::cout << root->GetRenderDataSize() << " renderable objects loaded" << std::endl;
     }
 
     int Scene::GetEntityCount(){

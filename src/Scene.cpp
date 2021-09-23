@@ -40,9 +40,9 @@ namespace Scenes {
         }
 
         if (root->inputManager.GetKeyState(SDL_SCANCODE_A)){
-            root->activeScene.activeCamera->transformComponent->SetPosition(root->activeScene.activeCamera->transformComponent->GetPosition() + ((glm::vec3(-1,0,0) * time) * 0.00025f));
-        } else if (root->inputManager.GetKeyState(SDL_SCANCODE_D)){
             root->activeScene.activeCamera->transformComponent->SetPosition(root->activeScene.activeCamera->transformComponent->GetPosition() + ((glm::vec3(1,0,0) * time) * 0.00025f));
+        } else if (root->inputManager.GetKeyState(SDL_SCANCODE_D)){
+            root->activeScene.activeCamera->transformComponent->SetPosition(root->activeScene.activeCamera->transformComponent->GetPosition() + ((glm::vec3(-1,0,0) * time) * 0.00025f));
         }
 
         if (root->inputManager.GetKeyState(SDL_SCANCODE_SPACE)){
@@ -53,7 +53,6 @@ namespace Scenes {
     }
 
     void Scene::CreateAllRenderData(){
-        // In here probs due to the first error
         root->renderData.clear();
         auto view = mRegistry.view<Components::MeshRenderer, Components::Transform>();
         
@@ -78,6 +77,7 @@ namespace Scenes {
         // TESTING
 		root->assetManager.AddNewTexture("test", "assets/textures/test.jpg", 2);
 		root->assetManager.AddNewMesh("cube", "assets/models/Cube.obj");
+		root->assetManager.AddNewMesh("monkey", "assets/models/arena.obj");
 		root->assetManager.AddNewShader("test", "assets/shaders/vert.spv", "assets/shaders/frag.spv");
 		root->assetManager.AddNewMaterial("testMat", "test", "test");
 
@@ -91,7 +91,7 @@ namespace Scenes {
         
         entt::entity entity = mRegistry.create();
         mRegistry.emplace<Components::Transform>(entity, glm::vec3(0,0,0), q, glm::vec3(1,1,1));
-        mRegistry.emplace<Components::MeshRenderer>(entity, "cube", "testMat");
+        mRegistry.emplace<Components::MeshRenderer>(entity, "monkey", "testMat");
 
         entt::entity entity2 = mRegistry.create();
         mRegistry.emplace<Components::Transform>(entity2, glm::vec3(2,2,0), q, glm::vec3(1,1,1));

@@ -1,6 +1,7 @@
 #pragma once
 
 #define GLM_FORCE_RADIANS
+#define GLM_RIGHT_HANDED
 
 #include <glm.hpp>
 #include <gtx/quaternion.hpp>

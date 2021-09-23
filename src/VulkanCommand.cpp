@@ -70,23 +70,26 @@ namespace VulkanModule {
                 vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, root->assetManager.loadedShaders[rd.first].graphicsPipeline);
 
                 for (auto& obj : rd.second) {
-                    // Bind vertex and index buffer
-                    VkBuffer vertexBuffers[] = { root->assetManager.loadedMeshes[obj.meshRenderer->meshRef].vertexBuffer };
-                    VkDeviceSize offsets[] = { 0 };
-
-                    vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
-                    vkCmdBindIndexBuffer(commandBuffers[i], root->assetManager.loadedMeshes[obj.meshRenderer->meshRef].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-                    vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, root->assetManager.loadedShaders[rd.first].pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
-
                     // Create push constants
                     PushConstants constants;
                     constants.model = *obj.transform;
 
-                    // Upload push constants
-                    vkCmdPushConstants(commandBuffers[i], root->assetManager.loadedShaders[rd.first].pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstants), &constants);
+                    for (auto& submesh : root->assetManager.loadedMeshes[obj.meshRenderer->meshRef].submeshes) {
+                        // Bind vertex and index buffer
+                        VkBuffer vertexBuffers[] = { submesh.vertexBuffer };
+                        VkDeviceSize offsets[] = { 0 };
 
-                    // Draw
-                    vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(root->assetManager.loadedMeshes[obj.meshRenderer->meshRef].indices.size()), 1, 0, 0, 0);
+                        vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+                        vkCmdBindIndexBuffer(commandBuffers[i], submesh.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+                        vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, root->assetManager.loadedShaders[rd.first].pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
+
+
+                        // Upload push constants
+                        vkCmdPushConstants(commandBuffers[i], root->assetManager.loadedShaders[rd.first].pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstants), &constants);
+
+                        // Draw
+                        vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(submesh.indices.size()), 1, 0, 0, 0);
+                    }
 
                     index++;
                 }
@@ -133,25 +136,26 @@ namespace VulkanModule {
             vkCmdBindPipeline(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, root->assetManager.loadedShaders[rd.first].graphicsPipeline);
 
             for (auto& obj : rd.second) {
-
-                // Bind vertex and index buffer
-                VkBuffer vertexBuffers[] = { root->assetManager.loadedMeshes[obj.meshRenderer->meshRef].vertexBuffer };
-                VkDeviceSize offsets[] = { 0 };
-
-                vkCmdBindVertexBuffers(commandBuffers[imageIndex], 0, 1, vertexBuffers, offsets);
-                vkCmdBindIndexBuffer(commandBuffers[imageIndex], root->assetManager.loadedMeshes[obj.meshRenderer->meshRef].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-                vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, root->assetManager.loadedShaders[rd.first].pipelineLayout, 0, 1, &descriptorSets[imageIndex], 0, nullptr);
-
                 // Create push constants
                 PushConstants constants;
                 constants.model = *obj.transform;
 
-                // Upload push constants
-                vkCmdPushConstants(commandBuffers[imageIndex], root->assetManager.loadedShaders[rd.first].pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstants), &constants);
+                for (auto& submesh : root->assetManager.loadedMeshes[obj.meshRenderer->meshRef].submeshes) {
+                    // Bind vertex and index buffer
+                    VkBuffer vertexBuffers[] = { submesh.vertexBuffer };
+                    VkDeviceSize offsets[] = { 0 };
 
-                // Draw
-                vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(root->assetManager.loadedMeshes[obj.meshRenderer->meshRef].indices.size()), 1, 0, 0, 0);
+                    vkCmdBindVertexBuffers(commandBuffers[imageIndex], 0, 1, vertexBuffers, offsets);
+                    vkCmdBindIndexBuffer(commandBuffers[imageIndex], submesh.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+                    vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, root->assetManager.loadedShaders[rd.first].pipelineLayout, 0, 1, &descriptorSets[imageIndex], 0, nullptr);
 
+                    // Upload push constants
+                    vkCmdPushConstants(commandBuffers[imageIndex], root->assetManager.loadedShaders[rd.first].pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstants), &constants);
+
+                    // Draw
+                    vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(submesh.indices.size()), 1, 0, 0, 0);
+                }
+                
                 index++;
             }
         }

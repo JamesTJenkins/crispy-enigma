@@ -32,17 +32,21 @@ namespace Data {
         glm::mat4* model;
     };
 
-    struct Mesh {
-        // Mesh object
+    struct SubMesh {
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
-        std::string meshPath;
 
         // Vulkan
         VkBuffer vertexBuffer;
         VkDeviceMemory vertexBufferMemory;
         VkBuffer indexBuffer;
         VkDeviceMemory indexBufferMemory;
+    };
+
+    struct Mesh {
+        std::string meshPath;
+
+        std::vector<SubMesh> submeshes;        
     };
 }
 

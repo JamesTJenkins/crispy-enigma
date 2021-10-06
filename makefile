@@ -35,7 +35,7 @@ INC_PATHS.linux :=
 LIB_PATHS.linux := 
 LIB_FILES.linux := vulkan SDL2 GLEW
 
-INC_PATHS.win32 := C:\Dev\SDL2\include C:\Dev\1.2.182.0\include C:\Dev\glew\include C:\Dev\glm\include C:\Dev\nlohmannJson\include C:\Dev\stb\include C:\Dev\tinyobjloader\include C:\Dev\entt-master\single_include\entt
+INC_PATHS.win32 := C:\Dev\SDL2\include C:\Dev\1.2.182.0\include C:\Dev\glew\include C:\Dev\glm\include C:\Dev\nlohmannJson\include C:\Dev\stb\include C:\Dev\tinyobjloader\include C:\Dev\tinygltf C:\Dev\entt-master\single_include\entt
 LIB_PATHS.win32 := C:\Dev\SDL2\lib\$(ARCH) C:\Dev\1.2.182.0\eLib\$(ARCH) C:\Dev\glew\lib\$(ARCH)
 LIB_FILES.win32 := vulkan-1 SDL2 glew32
 

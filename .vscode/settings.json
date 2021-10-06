@@ -85,6 +85,8 @@
         "codecvt": "cpp",
         "iomanip": "cpp",
         "stack": "cpp",
-        "shared_mutex": "cpp"
+        "shared_mutex": "cpp",
+        "forward_list": "cpp",
+        "regex": "cpp"
     }
 }

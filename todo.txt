@@ -14,6 +14,11 @@ Setup VMats to be materials, rather than just shader pipelines (possibly rename 
 Object manager notes:
 Could switch from sting ids to hashed string ids, so still input readable and memorable ids but not lose out on a small amount of performance
 
+Loaders
+
+modify .obj to handle larger .obj files, as errors out with very dense meshes
+modify GLTF loader to handle .gltf as well as .glb, and allow the data to be used as it is just loaded and not used
+
 Scenes and vulkan
 
 + Scenes add to vector with meshRenderComponents (done, RenderData)

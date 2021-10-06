@@ -1,11 +1,10 @@
 #include"AssetManager.h"
 
-#define TINYOBJLOADER_IMPLEMENTATION
-
-#include <tiny_obj_loader.h>
 #include <unordered_map>
+
 #include "Root.h"
-#include "Timer.h"
+#include "OBJLoader.h"
+#include "GLTFLoader.h"
 
 namespace Manager {
     AssetManager::AssetManager(Root* _root) : root(_root) {
@@ -78,64 +77,42 @@ namespace Manager {
     }
 
     void AssetManager::LoadModel(Data::Mesh* mesh) {
-        tinyobj::attrib_t attrib;
-        std::vector<tinyobj::shape_t> shapes;
-        std::vector<tinyobj::material_t> materials;
-        std::string warn, err;
+        std::string extension = GetFileExtension(mesh->meshPath);
 
-        Utilities::Timer timer;
-        timer.Start();
-
-        if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, mesh->meshPath.c_str())) {
-            throw std::runtime_error(warn + err);
+        // For gtFL only loads binary format
+        if (extension == "glb") {
+            LoadGTFL(mesh);
+        } else if (extension == "obj") {
+            LoadObj(mesh);
+        } else {
+            std::cout << "Invalid file" << std::endl;
         }
+    }
 
-        timer.Stop();
+    void AssetManager::LoadObj(Data::Mesh* mesh) {
+        Utilities::OBJLoader loader;
 
-        std::cout << "File parsing time: " << timer.ElapsedMilliseconds() << "ms" << std::endl;
-
-        std::cout << "Vertex count: " << (int)(attrib.vertices.size()) / 3 << std::endl;
-        std::cout << "Normal count: " << (int)(attrib.normals.size()) / 3 << std::endl;
-        std::cout << "Texcoord count: " << (int)(attrib.texcoords.size()) / 2 << std::endl;
-        std::cout << "Material count: " << (int)(materials.size()) << std::endl;
-        std::cout << "Shape count: " << (int)(shapes.size()) << std::endl;
-
-        timer.Start();
-        
-        for (const auto& shape : shapes) {
-            Data::SubMesh subMesh;
-            std::unordered_map<Data::Vertex, uint32_t> uniqueVertices {};
-
-            for (const auto& index : shape.mesh.indices) {
-                Data::Vertex vertex {};
-
-                vertex.pos = {
-                    attrib.vertices[3 * index.vertex_index + 0],
-                    attrib.vertices[3 * index.vertex_index + 1],
-                    attrib.vertices[3 * index.vertex_index + 2]
-                };
-
-                // -1f cause of vulkan having taken it in a different orientation
-                vertex.texCoord = {
-                    attrib.texcoords[2 * index.texcoord_index + 0],
-                    1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-                };
-
-                vertex.color = { 1.0f, 1.0f, 1.0f };
-
-                if (uniqueVertices.count(vertex) == 0) {
-                    uniqueVertices[vertex] = static_cast<uint32_t>(subMesh.vertices.size());
-                    subMesh.vertices.push_back(vertex);
-                }
-
-                subMesh.indices.push_back(uniqueVertices[vertex]);
-            }
-            // Add the submesh
-            mesh->submeshes.push_back(subMesh);
+        if (loader.LoadObj(mesh)) {
+            std::cout << "Loaded mesh" << std::endl;
+        } else {
+            std::cout << "Failed to load mesh" << std::endl;
         }
+    }
 
-        timer.Stop();
+    void AssetManager::LoadGTFL(Data::Mesh* mesh) {
+        Utilities::GLTFLoader loader;
 
-        std::cout << "Object parsing time: " << timer.ElapsedMilliseconds() << "ms" << std::endl;
+        if (loader.LoadGLTF(mesh)) {
+            std::cout << "Loaded mesh" << std::endl;
+        } else {
+            std::cout << "Failed to load mesh" << std::endl;
+        }
+    }
+
+    std::string AssetManager::GetFileExtension(std::string filePath) {
+        if (filePath.find_last_of(".") != std::string::npos)
+            return filePath.substr(filePath.find_last_of(".") + 1);
+
+        return "";
     }
 }

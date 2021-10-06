@@ -26,6 +26,10 @@ namespace Manager {
         // Helper functions
         void ClearAssetData();
         void LoadModel(Data::Mesh* mesh);
+        void LoadObj(Data::Mesh* mesh);
+        void LoadGTFL(Data::Mesh* mesh);
+
+        std::string GetFileExtension(std::string filePath);
 
         // Objects
         std::unordered_map<std::string, Data::Shader> loadedShaders;

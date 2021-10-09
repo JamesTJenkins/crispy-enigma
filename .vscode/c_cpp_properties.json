@@ -28,6 +28,7 @@
                 "C:/Dev/nlohmannJson/include",
                 "C:/Dev/stb/include",
                 "C:/Dev/tinyobjloader/include",
+                "C:/Dev/tinygltf",
                 "C:/Dev/entt-master/single_include/entt"
             ],
             "defines": [],

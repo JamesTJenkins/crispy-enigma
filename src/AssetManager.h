@@ -5,6 +5,7 @@
 #include "Materials.h"
 #include "Mesh.h"
 #include "Root.fwd.h"
+#include "tiny_gltf.h"
 
 /*
     Object manager is just for importing and holding data for Vulkan to use
@@ -22,14 +23,10 @@ namespace Manager {
         void AddNewShader(std::string name, std::string vertexShaderPath, std::string fragmentShaderPath);
         void AddNewMaterial(std::string name, std::string textureName, std::string shaderName);
         void AddNewMesh(std::string name, std::string path);
+        void LoadGLTF(std::string path);
 
         // Helper functions
         void ClearAssetData();
-        void LoadModel(Data::Mesh* mesh);
-        void LoadObj(Data::Mesh* mesh);
-        void LoadGTFL(Data::Mesh* mesh);
-
-        std::string GetFileExtension(std::string filePath);
 
         // Objects
         std::unordered_map<std::string, Data::Shader> loadedShaders;
@@ -37,6 +34,12 @@ namespace Manager {
         std::unordered_map<std::string, Data::Mesh> loadedMeshes;
         std::unordered_map<std::string, Data::Material> loadedMaterials;
     private:
+        std::string GetFileExtension(std::string filePath);
+        
+        void ParseGLTF(tinygltf::Model* model);
+        void LoadModel(Data::Mesh* mesh);
+        void LoadObj(Data::Mesh* mesh);
+        
         Root* root;
     };
 }

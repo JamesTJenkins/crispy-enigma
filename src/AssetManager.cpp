@@ -76,15 +76,56 @@ namespace Manager {
         std::cout << "Cleared asset data" << std::endl;
     }
 
+    void AssetManager::LoadGLTF(std::string path) {
+        std::string extension = GetFileExtension(path);
+
+        if (extension == "glb") {
+            Utilities::GLTFLoader loader;
+            tinygltf::Model model;
+
+            if (loader.LoadGLB(&model, path)) {
+                std::cout << "Loaded gltf file" << std::endl;
+
+                ParseGLTF(&model);
+            }
+            else {
+                std::cout << "Failed to load mesh" << std::endl;
+            }
+        } else if (extension == "gltf") {
+            Utilities::GLTFLoader loader;
+            tinygltf::Model model;
+
+            if (loader.LoadGLTF(&model, path)) {
+                std::cout << "Loaded gltf file" << std::endl;
+
+                ParseGLTF(&model);
+            }
+            else {
+                std::cout << "Failed to load mesh" << std::endl;
+            }
+        } else {
+            std::cout << "Invalid file" << std::endl;
+        }
+    }
+
+    std::string AssetManager::GetFileExtension(std::string filePath) {
+        if (filePath.find_last_of(".") != std::string::npos)
+            return filePath.substr(filePath.find_last_of(".") + 1);
+
+        return "";
+    }
+
+    void AssetManager::ParseGLTF(tinygltf::Model* model) {
+        // Parse here
+    }
+
     void AssetManager::LoadModel(Data::Mesh* mesh) {
         std::string extension = GetFileExtension(mesh->meshPath);
 
-        // For gtFL only loads binary format
-        if (extension == "glb") {
-            LoadGTFL(mesh);
-        } else if (extension == "obj") {
+        if (extension == "obj") {
             LoadObj(mesh);
-        } else {
+        }
+        else {
             std::cout << "Invalid file" << std::endl;
         }
     }
@@ -94,25 +135,9 @@ namespace Manager {
 
         if (loader.LoadObj(mesh)) {
             std::cout << "Loaded mesh" << std::endl;
-        } else {
+        }
+        else {
             std::cout << "Failed to load mesh" << std::endl;
         }
-    }
-
-    void AssetManager::LoadGTFL(Data::Mesh* mesh) {
-        Utilities::GLTFLoader loader;
-
-        if (loader.LoadGLTF(mesh)) {
-            std::cout << "Loaded mesh" << std::endl;
-        } else {
-            std::cout << "Failed to load mesh" << std::endl;
-        }
-    }
-
-    std::string AssetManager::GetFileExtension(std::string filePath) {
-        if (filePath.find_last_of(".") != std::string::npos)
-            return filePath.substr(filePath.find_last_of(".") + 1);
-
-        return "";
     }
 }

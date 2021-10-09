@@ -77,7 +77,7 @@ namespace Scenes {
         // TESTING
 		root->assetManager.AddNewTexture("test", "assets/textures/test.jpg", 2);
 		root->assetManager.AddNewMesh("cube", "assets/models/Cube.obj");
-		root->assetManager.AddNewMesh("monkey", "assets/models/arena.glb");
+		root->assetManager.LoadGLTF("assets/models/arena.glb");
 		root->assetManager.AddNewShader("test", "assets/shaders/vert.spv", "assets/shaders/frag.spv");
 		root->assetManager.AddNewMaterial("testMat", "test", "test");
 

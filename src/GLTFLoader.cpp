@@ -16,14 +16,30 @@ namespace Utilities {
 
     }
 
-    bool GLTFLoader::LoadGLTF(Data::Mesh *mesh) {
+    bool GLTFLoader::LoadGLB(tinygltf::Model *model, std::string path) {
         tinygltf::TinyGLTF loader;
 
-        tinygltf::Model model;
         std::string error;
         std::string warning;
 
-        if (loader.LoadBinaryFromFile(&model, &error, &warning, mesh->meshPath)) {
+        if (loader.LoadBinaryFromFile(model, &error, &warning, path)) {
+            PrintErrors(&error, &warning);
+
+            return true;
+        } else {
+            PrintErrors(&error, &warning);
+
+            return false;
+        }
+    }
+
+    bool GLTFLoader::LoadGLTF(tinygltf::Model *model, std::string path) {
+        tinygltf::TinyGLTF loader;
+
+        std::string error;
+        std::string warning;
+
+        if (loader.LoadASCIIFromFile(model, &error, &warning, path)) {
             PrintErrors(&error, &warning);
 
             return true;

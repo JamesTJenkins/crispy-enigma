@@ -36,7 +36,6 @@ namespace Manager {
     private:
         std::string GetFileExtension(std::string filePath);
         
-        void ParseGLTF(tinygltf::Model* model);
         void LoadModel(Data::Mesh* mesh);
         void LoadObj(Data::Mesh* mesh);
         

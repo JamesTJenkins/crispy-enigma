@@ -86,9 +86,8 @@ namespace Manager {
             if (loader.LoadGLB(&model, path)) {
                 std::cout << "Loaded gltf file" << std::endl;
 
-                ParseGLTF(&model);
-            }
-            else {
+                loader.ParseGLTF(root, &model);
+            } else {
                 std::cout << "Failed to load mesh" << std::endl;
             }
         } else if (extension == "gltf") {
@@ -98,9 +97,8 @@ namespace Manager {
             if (loader.LoadGLTF(&model, path)) {
                 std::cout << "Loaded gltf file" << std::endl;
 
-                ParseGLTF(&model);
-            }
-            else {
+                loader.ParseGLTF(root, &model);
+            } else {
                 std::cout << "Failed to load mesh" << std::endl;
             }
         } else {
@@ -115,17 +113,12 @@ namespace Manager {
         return "";
     }
 
-    void AssetManager::ParseGLTF(tinygltf::Model* model) {
-        // Parse here
-    }
-
     void AssetManager::LoadModel(Data::Mesh* mesh) {
         std::string extension = GetFileExtension(mesh->meshPath);
 
         if (extension == "obj") {
             LoadObj(mesh);
-        }
-        else {
+        } else {
             std::cout << "Invalid file" << std::endl;
         }
     }
@@ -135,8 +128,7 @@ namespace Manager {
 
         if (loader.LoadObj(mesh)) {
             std::cout << "Loaded mesh" << std::endl;
-        }
-        else {
+        } else {
             std::cout << "Failed to load mesh" << std::endl;
         }
     }

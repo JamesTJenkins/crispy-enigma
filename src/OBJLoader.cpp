@@ -61,12 +61,18 @@ namespace Utilities {
                 };
 
                 // -1f cause of vulkan having taken it in a different orientation
-                vertex.texCoord = {
+                vertex.texCoord0 = {
                     attrib.texcoords[2 * index.texcoord_index + 0],
                     1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
                 };
 
-                vertex.color = { 1.0f, 1.0f, 1.0f };
+                // Cant find much information on texcoord 1 so will leave as this for now
+                vertex.texCoord1 = {
+                    attrib.texcoords[2 * index.texcoord_index + 2],
+                    1.0f - attrib.texcoords[2 * index.texcoord_index + 3]
+                };
+
+                vertex.color = { attrib.colors[0], attrib.colors[1], attrib.colors[2] };
 
                 if (uniqueVertices.count(vertex) == 0) {
                     uniqueVertices[vertex] = static_cast<uint32_t>(subMesh.vertices.size());

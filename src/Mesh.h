@@ -13,13 +13,14 @@ namespace Data {
     struct Vertex {
         glm::vec3 pos;
         glm::vec3 color;
-        glm::vec2 texCoord;
+        glm::vec2 texCoord0;
+        glm::vec2 texCoord1;
 
         static VkVertexInputBindingDescription GetBindingDescription();
-        static std::array<VkVertexInputAttributeDescription, 3> GetAttributeDescriptions();
+        static std::array<VkVertexInputAttributeDescription, 4> GetAttributeDescriptions();
     
         bool operator==(const Vertex& other) const {
-            return pos == other.pos && color == other.color && texCoord == other.texCoord;
+            return pos == other.pos && color == other.color && texCoord0 == other.texCoord0 && texCoord1 == other.texCoord1;
         }
     };
 
@@ -53,7 +54,7 @@ namespace Data {
 namespace std {
     template<> struct hash<Data::Vertex> {
         size_t operator()(Data::Vertex const& vertex) const {
-            return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
+            return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord0) << 1);
         }
     };
 }

@@ -14,8 +14,8 @@ namespace Data {
         return bindingDescription;
     }
 
-    std::array<VkVertexInputAttributeDescription, 3> Vertex::GetAttributeDescriptions(){
-        std::array<VkVertexInputAttributeDescription, 3> attributeDescription{};
+    std::array<VkVertexInputAttributeDescription, 4> Vertex::GetAttributeDescriptions(){
+        std::array<VkVertexInputAttributeDescription, 4> attributeDescription{};
         
         attributeDescription[0].binding = 0;
         attributeDescription[0].location = 0;
@@ -31,7 +31,12 @@ namespace Data {
         attributeDescription[2].binding = 0;
         attributeDescription[2].location = 2;
         attributeDescription[2].format = VK_FORMAT_R32G32_SFLOAT;
-        attributeDescription[2].offset = offsetof(Vertex, texCoord);
+        attributeDescription[2].offset = offsetof(Vertex, texCoord0);
+
+        attributeDescription[3].binding = 0;
+        attributeDescription[3].location = 3;
+        attributeDescription[3].format = VK_FORMAT_R32G32_SFLOAT;
+        attributeDescription[3].offset = offsetof(Vertex, texCoord1);
 
         return attributeDescription;
     }

@@ -99,12 +99,18 @@ namespace Utilities {
                 const tinygltf::Buffer& posBuffer = model->buffers[posBufferView.buffer];
                 const float* positions = reinterpret_cast<const float*>(&posBuffer.data[posBufferView.byteOffset + posAccessor.byteOffset]);
                 
-                // Texcoords 
-                const tinygltf::Accessor& texcoordAccessor = model->accessors[primitive.attributes["TEXCOORD_0"]];
-                const tinygltf::BufferView& texcoordBufferView = model->bufferViews[texcoordAccessor.bufferView];
-                const tinygltf::Buffer& texcoordBuffer = model->buffers[texcoordBufferView.buffer];
-                const float* texcoords = reinterpret_cast<const float*>(&texcoordBuffer.data[texcoordBufferView.byteOffset + texcoordAccessor.byteOffset]);
+                // Texcoord 0
+                const tinygltf::Accessor& texcoord0Accessor = model->accessors[primitive.attributes["TEXCOORD_0"]];
+                const tinygltf::BufferView& texcoord0BufferView = model->bufferViews[texcoord0Accessor.bufferView];
+                const tinygltf::Buffer& texcoord0Buffer = model->buffers[texcoord0BufferView.buffer];
+                const float* texcoord0 = reinterpret_cast<const float*>(&texcoord0Buffer.data[texcoord0BufferView.byteOffset + texcoord0Accessor.byteOffset]);
                 
+                // Texcoord 1
+                const tinygltf::Accessor& texcoord1Accessor = model->accessors[primitive.attributes["TEXCOORD_1"]];
+                const tinygltf::BufferView& texcoord1BufferView = model->bufferViews[texcoord1Accessor.bufferView];
+                const tinygltf::Buffer& texcoord1Buffer = model->buffers[texcoord1BufferView.buffer];
+                const float* texcoord1 = reinterpret_cast<const float*>(&texcoord1Buffer.data[texcoord1BufferView.byteOffset + texcoord1Accessor.byteOffset]);
+
                 // Color
                 const tinygltf::Accessor& colorAccessor = model->accessors[primitive.attributes["COLOR_0"]];
                 const tinygltf::BufferView& colorBufferView = model->bufferViews[colorAccessor.bufferView];
@@ -126,9 +132,14 @@ namespace Utilities {
                         positions[i * 3 + 2]
                     };
 
-                    vertex.texCoord = {
-                        texcoords[i * 2 + 0],
-                        1.0f - texcoords[i * 2 + 1]
+                    vertex.texCoord0 = {
+                        texcoord0[i * 2 + 0],
+                        1.0f - texcoord0[i * 2 + 1]
+                    };
+
+                    vertex.texCoord1 = {
+                        texcoord1[i * 2 + 0],
+                        1.0f - texcoord1[i * 2 + 1]
                     };
 
                     vertex.color = { 
@@ -169,25 +180,25 @@ namespace Utilities {
                 MeshData mData;
 
                 mData.meshName = model->meshes[node.mesh].name;
-                // Check if given translation, rotation, scale or a matrix
-                if (node.translation.size() == 3 && node.rotation.size() == 4 && node.scale.size() == 3) {
-                    printf("1");
-                    mData.transform = Components::Transform(
-                        glm::vec3(node.translation[0], node.translation[1], node.translation[2]), 
-                        glm::quat(node.rotation[3], node.rotation[0], node.rotation[1], node.rotation[2]),  // quat does w,x,y,z while gltf is x,y,z,w
-                        glm::vec3(node.scale[0], node.scale[1], node.scale[2])
-                    );
-                } else if (node.matrix.size() == 16) {
-                    printf("2");
-                    mData.transform = Components::Transform(glm::mat4(
-                        node.matrix[0], node.matrix[1], node.matrix[2], node.matrix[3],
-                        node.matrix[4], node.matrix[5], node.matrix[6], node.matrix[7],
-                        node.matrix[8], node.matrix[9], node.matrix[10], node.matrix[11],
-                        node.matrix[12], node.matrix[13], node.matrix[14], node.matrix[15]
-                    ));
+                
+                if (node.matrix.size() == 16) {
+                    // If matrix available
+                    mData.transform = Components::Transform(DoubleToMat4(node.matrix));
                 } else {
-                    // If neither just default
+                    // Fill with default initially
                     mData.transform = Components::Transform(glm::vec3(0,0,0), glm::quat(glm::highp_vec3 (0,0,0)), glm::vec3(1,1,1));
+
+                    // If there is translation apply it
+                    if (node.translation.size() == 3)
+                        mData.transform.SetPosition(DoubleToVec3(node.translation));
+                    
+                    // If there is rotation apply it
+                    if (node.rotation.size() == 4)
+                        mData.transform.SetRotation(DoubleToQuat(node.rotation));
+
+                    // If there is scale apply it
+                    if (node.scale.size() == 3)
+                        mData.transform.SetScale(DoubleToVec3(node.scale));
                 }
 
                 meshData.push_back(mData);
@@ -197,6 +208,28 @@ namespace Utilities {
         // Generate the entities
         CreateEntities(root, meshData);
     }
+
+    // Conversions from tinygltf double vectors to glm types
+
+    glm::vec3 GLTFLoader::DoubleToVec3(std::vector<double> doubles) {
+        return glm::vec3(doubles[0], doubles[1], doubles[2]);
+    }
+
+    glm::quat GLTFLoader::DoubleToQuat(std::vector<double> doubles) {
+        // quat does w,x,y,z while gltf is x,y,z,w
+        return glm::quat(doubles[3], doubles[0], doubles[1], doubles[2]);
+    }
+
+    glm::mat4 GLTFLoader::DoubleToMat4(std::vector<double> doubles) {
+        return glm::mat4(
+            doubles[0], doubles[1], doubles[2], doubles[3],
+            doubles[4], doubles[5], doubles[6], doubles[7],
+            doubles[8], doubles[9], doubles[10], doubles[11],
+            doubles[12], doubles[13], doubles[14], doubles[15]
+        );
+    }
+
+    // Entity creation
 
     void GLTFLoader::CreateEntities(Root* root, std::vector<MeshData> meshData) {
         // Get current registry
@@ -209,6 +242,8 @@ namespace Utilities {
             reg->emplace<Components::MeshRenderer>(entity, meshData[i].meshName, "testMat");
         }
     }
+
+    // Debugging
 
     void GLTFLoader::PrintErrors(std::string* error, std::string* warning) {
         if (!warning->empty()) {

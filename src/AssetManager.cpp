@@ -60,22 +60,6 @@ namespace Manager {
         loadedMeshes[name] = mesh;
     }
 
-    void AssetManager::ClearAssetData() {
-        // Destroy all pipelines and clear from asset manager
-        root->vulkan.vPipeline.Cleanup();
-        loadedShaders.clear();
-        // Destroy all textures and clear from asset manager
-        root->vulkan.CleanupOldTextures();
-        loadedTextures.clear();
-        // Destroy all meshes and clear from asset manager
-        root->vulkan.CleanupOldMeshes();
-        loadedMeshes.clear();
-        // Clear from asset manager (only references)
-        loadedMaterials.clear();
-
-        std::cout << "Cleared asset data" << std::endl;
-    }
-
     void AssetManager::LoadGLTF(std::string path) {
         std::string extension = GetFileExtension(path);
 
@@ -104,6 +88,22 @@ namespace Manager {
         } else {
             std::cout << "Invalid file" << std::endl;
         }
+    }
+
+    void AssetManager::ClearAssetData() {
+        // Destroy all pipelines and clear from asset manager
+        root->vulkan.vPipeline.Cleanup();
+        loadedShaders.clear();
+        // Destroy all textures and clear from asset manager
+        root->vulkan.CleanupOldTextures();
+        loadedTextures.clear();
+        // Destroy all meshes and clear from asset manager
+        root->vulkan.CleanupOldMeshes();
+        loadedMeshes.clear();
+        // Clear from asset manager (only references)
+        loadedMaterials.clear();
+
+        std::cout << "Cleared asset data" << std::endl;
     }
 
     std::string AssetManager::GetFileExtension(std::string filePath) {

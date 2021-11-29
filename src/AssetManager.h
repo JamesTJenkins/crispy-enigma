@@ -23,7 +23,7 @@ namespace Manager {
         void AddNewShader(std::string name, std::string vertexShaderPath, std::string fragmentShaderPath);
         void AddNewMaterial(std::string name, std::string textureName, std::string shaderName);
         void AddNewMesh(std::string name, std::string path);
-        void LoadGLTF(std::string path);
+        void LoadGLTF(std::string name);
 
         // Helper functions
         void ClearAssetData();

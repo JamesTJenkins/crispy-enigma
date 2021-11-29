@@ -5,7 +5,6 @@
 #include <iostream>
 #include <stb_image.h>
 
-
 namespace VulkanModule {
     VulkanImage::VulkanImage(VulkanDevice* device, VulkanCommand* commandBuffer, VulkanBuffer* buffer) : vDevice(device), vCommand(commandBuffer), vBuffer(buffer) {
 

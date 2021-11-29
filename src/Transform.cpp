@@ -1,11 +1,16 @@
 #include "Transform.h"
 #include <gtx/transform.hpp>
+#include <gtx/matrix_decompose.hpp>
 
 namespace Components {
     Transform::Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale) {
         SetPosition(position);
         SetRotation(rotation);
         SetScale(scale);
+    }
+
+    Transform::Transform(glm::mat4 matrix) {
+        transform = matrix;
     }
 
     void Transform::SetPosition(glm::vec3 position) {
@@ -78,6 +83,23 @@ namespace Components {
 
     glm::vec3 Transform::Backward(){
         return GetRotation() * glm::vec3(0,0,-1);
+    }
+
+    void Transform::DecomposeMatrix() {
+        // Used purely to create the other matricies if transform was created with a matrix
+        glm::vec3 translation;
+        glm::quat rotation;
+        glm::vec3 scale;
+        glm::vec3 skew;
+        glm::vec4 perspective;
+
+        // Decompose
+        glm::decompose(transform, scale, rotation, translation, skew, perspective);
+    
+        // Fill required values
+        SetPosition(translation);
+        SetRotation(rotation);
+        SetScale(scale);
     }
 
     void Transform::RecreateTransformMatrix() {

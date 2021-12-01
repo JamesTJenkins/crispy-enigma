@@ -37,6 +37,7 @@ namespace Engine {
 			}
 
             // Handle inputs
+            root.inputManager.HandleMouseInput();
             root.inputManager.HandleKeyboardInput();
 			// Scene update
 			root.activeScene.UpdateScene();

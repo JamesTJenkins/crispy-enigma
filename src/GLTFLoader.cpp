@@ -99,6 +99,12 @@ namespace Utilities {
                 const tinygltf::Buffer& posBuffer = model->buffers[posBufferView.buffer];
                 const float* positions = reinterpret_cast<const float*>(&posBuffer.data[posBufferView.byteOffset + posAccessor.byteOffset]);
                 
+                // Normals
+                const tinygltf::Accessor& normalAccessor = model->accessors[primitive.attributes["NORMAL"]];
+                const tinygltf::BufferView& normalBufferView = model->bufferViews[normalAccessor.bufferView];
+                const tinygltf::Buffer& normalBuffer = model->buffers[normalBufferView.buffer];
+                const float* normals = reinterpret_cast<const float*>(&normalBuffer.data[normalBufferView.byteOffset + normalAccessor.byteOffset]);
+
                 // Texcoord 0
                 const tinygltf::Accessor& texcoord0Accessor = model->accessors[primitive.attributes["TEXCOORD_0"]];
                 const tinygltf::BufferView& texcoord0BufferView = model->bufferViews[texcoord0Accessor.bufferView];
@@ -125,11 +131,17 @@ namespace Utilities {
 
                 for (size_t i = 0; i < posAccessor.count; ++i){
                     Data::Vertex vertex {};
-                    
+
                     vertex.pos = {
                         positions[i * 3 + 0],
                         positions[i * 3 + 1],
                         positions[i * 3 + 2]
+                    };
+
+                    vertex.normal = {
+                        normals[i * 3 + 0],
+                        normals[i * 3 + 1],
+                        normals[i * 3 + 2]
                     };
 
                     vertex.texCoord0 = {

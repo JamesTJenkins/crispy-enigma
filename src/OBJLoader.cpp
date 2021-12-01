@@ -60,6 +60,12 @@ namespace Utilities {
                     attrib.vertices[3 * index.vertex_index + 2]
                 };
 
+                vertex.normal = {
+                    attrib.vertices[3 * index.vertex_index + 0],
+                    attrib.vertices[3 * index.vertex_index + 1],
+                    attrib.vertices[3 * index.vertex_index + 2]
+                };
+
                 // -1f cause of vulkan having taken it in a different orientation
                 vertex.texCoord0 = {
                     attrib.texcoords[2 * index.texcoord_index + 0],

@@ -18,7 +18,7 @@ namespace Data {
         glm::vec2 texCoord1;
 
         static VkVertexInputBindingDescription GetBindingDescription();
-        static std::array<VkVertexInputAttributeDescription, 4> GetAttributeDescriptions();
+        static std::array<VkVertexInputAttributeDescription, 5> GetAttributeDescriptions();
     
         bool operator==(const Vertex& other) const {
             return pos == other.pos && normal == other.normal && color == other.color && texCoord0 == other.texCoord0 && texCoord1 == other.texCoord1;

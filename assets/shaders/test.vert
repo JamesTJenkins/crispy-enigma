@@ -9,6 +9,7 @@ layout(location = 4) in vec2 inTexCoord1;
 layout(location = 0) out vec3 fragColor;
 layout(location = 1) out vec2 fragTexCoord0;
 layout(location = 2) out vec2 fragTexCoord1;
+layout(location = 3) out int texId;
 
 layout(binding = 0) uniform UniformBufferObject {
 	mat4 view;
@@ -17,13 +18,14 @@ layout(binding = 0) uniform UniformBufferObject {
 
 layout (push_constant) uniform constants {
     mat4 model;
+    int texId;
 } pushConstants;
 
 void main(){
-
 	gl_Position = ubo.proj * ubo.view * pushConstants.model * vec4(inPosition, 1.0);
 	
 	fragColor = inColor;
 	fragTexCoord0 = inTexCoord0;
     fragTexCoord1 = inTexCoord1;
+    texId = pushConstants.texId;
 }

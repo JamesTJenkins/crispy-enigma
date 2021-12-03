@@ -12,6 +12,7 @@ namespace Data {
         std::string texturePath;
 
         // Vulkan
+        int textureId;
         VkImage textureImage;
         VkDeviceMemory textureImageMemory;
         VkSampler textureSampler;
@@ -30,7 +31,7 @@ namespace Data {
     };
 
     struct Material {
-        std::string albedo;
+        std::string texture;
         std::string shader;
     };
 }

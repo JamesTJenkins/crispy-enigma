@@ -19,6 +19,7 @@ namespace Manager {
         Data::Texture tex;
         tex.texturePath = path;
         tex.mipLevels = mipLevels;
+        tex.textureId = loadedTextures.size();
 
         // Initalize for vulkan
         root->vulkan.vImage.CreateTextureImage(&tex);
@@ -41,7 +42,7 @@ namespace Manager {
 
     void AssetManager::AddNewMaterial(std::string name, std::string textureName, std::string shaderName) {
         Data::Material mat;
-        mat.albedo = textureName;
+        mat.texture = textureName;
         mat.shader = shaderName;
 
         loadedMaterials[name] = mat;

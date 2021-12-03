@@ -139,6 +139,7 @@ namespace VulkanModule {
                 // Create push constants
                 PushConstants constants;
                 constants.model = *obj.transform;
+                constants.texId = root->assetManager.loadedTextures[root->assetManager.loadedMaterials[obj.meshRenderer->materialRef].texture].textureId;
 
                 for (auto& submesh : root->assetManager.loadedMeshes[obj.meshRenderer->meshRef].submeshes) {
                     // Bind vertex and index buffer

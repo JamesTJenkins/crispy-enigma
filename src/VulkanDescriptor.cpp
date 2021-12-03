@@ -163,7 +163,7 @@ namespace VulkanModule {
                 imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                 imageInfo.imageView = t.second.textureImageView;
                 imageInfo.sampler = t.second.textureSampler;
-                imageInfos.push_back(imageInfo);
+                imageInfos.insert(imageInfos.begin(), imageInfo);
             }
 
             descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

@@ -38,6 +38,14 @@ namespace VulkanModule {
 		VkPhysicalDeviceFeatures deviceFeatures{};
 		deviceFeatures.samplerAnisotropy = VK_TRUE;
 		deviceFeatures.sampleRateShading = VK_TRUE;
+        
+        // Allows for variable length arrays within shaders
+        VkPhysicalDeviceDescriptorIndexingFeatures indexingFeatures {};
+        indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
+        indexingFeatures.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;
+        indexingFeatures.runtimeDescriptorArray = VK_TRUE;
+        indexingFeatures.descriptorBindingVariableDescriptorCount = VK_TRUE;
+        indexingFeatures.descriptorBindingPartiallyBound = VK_TRUE;
 
 		// Creation of the logical device
 		VkDeviceCreateInfo createInfo{};
@@ -47,6 +55,7 @@ namespace VulkanModule {
 		createInfo.pEnabledFeatures = &deviceFeatures;
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
 		createInfo.ppEnabledExtensionNames = deviceExtensions.data();
+        createInfo.pNext = &indexingFeatures;
 
 		// This is not required with newer versions of Vulkan but was suggested to be added anyway
 		if (vInstance->enableValidationLayers) {

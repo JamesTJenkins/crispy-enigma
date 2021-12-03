@@ -18,6 +18,14 @@ namespace Components {
         void SetRotation(glm::quat rotation);
         void SetScale(glm::vec3 scale);
 
+        void Rotate(float angle_in_radians, glm::vec3 axis);
+        void Rotate(glm::quat quaternion);
+
+        // Converts euler angles to quaterion
+        glm::quat EulerToQuat(glm::vec3 rotation_in_degrees);
+        // Converts quaternion to euler angles, returns in degrees
+        glm::vec3 QuatToEuler(glm::quat quaternion);
+
         glm::vec3 GetPosition();
         glm::quat GetRotation();
         glm::vec3 GetScale();

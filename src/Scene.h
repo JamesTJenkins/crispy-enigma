@@ -16,6 +16,8 @@ namespace Scenes {
 
         void LoadData();
         void PrintLoadedDataStats();
+
+        entt::registry* GetRegistry();
         int GetEntityCount();
 
         Components::Camera* activeCamera = nullptr;

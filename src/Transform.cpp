@@ -28,6 +28,7 @@ namespace Components {
 
     void Transform::SetRotation(glm::quat rotation) {
         rotationMatrix = glm::mat4_cast(rotation);
+    
         RecreateTransformMatrix();
     }
 
@@ -43,6 +44,26 @@ namespace Components {
         */
 
         RecreateTransformMatrix();
+    }
+
+    void Transform::Rotate(float angle_in_radians, glm::vec3 axis) {
+        rotationMatrix = glm::rotate(rotationMatrix, angle_in_radians, axis);
+
+        RecreateTransformMatrix();
+    }
+
+    void Transform::Rotate(glm::quat quaternion) {
+        rotationMatrix = glm::mat4_cast(GetRotation() * quaternion);
+        
+        RecreateTransformMatrix();
+    }
+
+    glm::quat Transform::EulerToQuat(glm::vec3 rotation_in_degrees) {
+       return glm::quat(glm::radians(rotation_in_degrees));
+    }
+
+    glm::vec3 Transform::QuatToEuler(glm::quat quaternion) {
+        return glm::eulerAngles(quaternion);
     }
 
 	glm::vec3 Transform::GetPosition() {

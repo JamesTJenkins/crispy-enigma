@@ -10,38 +10,37 @@ namespace Components {
     struct Transform {
     public:
         Transform(glm::vec3 position = glm::vec3(0,0,0), glm::quat rotation = glm::quat(), glm::vec3 scale = glm::vec3(1,1,1));
-        Transform(glm::mat4 matrix);
-
-	    glm::mat4 transform;
-
-        void SetPosition(glm::vec3 position);
-        void SetRotation(glm::quat rotation);
-        void SetScale(glm::vec3 scale);
+        Transform(glm::mat4 localToWorldMatrix);
 
         void Rotate(float angle_in_radians, glm::vec3 axis);
         void Rotate(glm::quat quaternion);
 
-        // Converts euler angles to quaterion
-        glm::quat EulerToQuat(glm::vec3 rotation_in_degrees);
-        // Converts quaternion to euler angles, returns in degrees
-        glm::vec3 QuatToEuler(glm::quat quaternion);
+        static glm::quat EulerToQuat(glm::vec3 rotation_in_degrees);
+        static glm::vec3 QuatToEuler(glm::quat quaternion);
 
-        glm::vec3 GetPosition();
-        glm::quat GetRotation();
-        glm::vec3 GetScale();
+        void SetPosition(glm::vec3 position);
+        void SetRotation(glm::quat rotation);
+        void SetScale(glm::vec3 scale);
+        glm::vec3 GetPosition() const;
+        glm::quat GetRotation() const;
+        glm::vec3 GetScale() const;
 
-        glm::vec3 Up();
-        glm::vec3 Down();
-        glm::vec3 Left();
-        glm::vec3 Right();
-        glm::vec3 Forward();
-        glm::vec3 Backward();
+        glm::vec3 Left() const;
+        glm::vec3 Right() const;
+        glm::vec3 Up() const;
+        glm::vec3 Down() const;
+        glm::vec3 Forward() const;
+        glm::vec3 Backward() const;
+
+        const glm::mat4& LocalToWorldMatrix();
+        const glm::mat4& WorldToLocalMatrix();
     private:
-        void RecreateTransformMatrix();
-        void DecomposeMatrix();
 
-        glm::mat4 translationMatrix;
-        glm::mat4 rotationMatrix;
-        glm::mat4 scaleMatrix;
+        glm::vec3 position;
+        glm::quat rotation;
+        glm::vec3 scale;
+
+        glm::mat4 localToWorldMatrix;
+        glm::mat4 worldToLocalMatrix;
     };
 }

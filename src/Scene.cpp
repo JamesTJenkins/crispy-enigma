@@ -59,25 +59,20 @@ namespace Scenes {
 
         if (mouseX > prevMouseX) {
             // Right
-            cam->Rotate(time * glm::radians(-1.0f), glm::vec3(0,1,0));
+            cam->Rotate(time * 0.1f * glm::radians(-1.0f), glm::vec3(0,1,0));
         } else if (mouseX < prevMouseX) {
             // Left
-            cam->Rotate(time * glm::radians(1.0f), glm::vec3(0,1,0));
+            cam->Rotate(time * 0.1f * glm::radians(1.0f), glm::vec3(0,1,0));
         }
 
         if (mouseY > prevMouseY) {
             // Up
-            cam->Rotate(time * glm::radians(-1.0f), cam->Right());
+            cam->Rotate(time * 0.1f * glm::radians(-1.0f), cam->Right());
         } else if (mouseY < prevMouseY) {
             // Down
-            cam->Rotate(time * glm::radians(1.0f), cam->Right());
+            cam->Rotate(time * 0.1f * glm::radians(1.0f), cam->Right());
         }
 
-        // Fix z rotation, fix this
-        glm::vec3 rot = cam->QuatToEuler(cam->GetRotation());
-
-        //cam->SetRotation(-cam->EulerToQuat(glm::vec3(rot.x, rot.y, 0.0f)));
-    
         prevMouseX = mouseX;
         prevMouseY = mouseY;
     }
@@ -90,7 +85,7 @@ namespace Scenes {
         for (auto entity : view) {
             VulkanModule::RenderData renderData;
             renderData.meshRenderer = &mRegistry.get<Components::MeshRenderer>(entity);
-            renderData.transform = &mRegistry.get<Components::Transform>(entity).transform;
+            renderData.transform = mRegistry.get<Components::Transform>(entity).LocalToWorldMatrix();
             root->renderData[root->assetManager.loadedMaterials[renderData.meshRenderer->materialRef].shader].push_back(renderData);
         }
 
@@ -110,14 +105,14 @@ namespace Scenes {
 		//root->assetManager.AddNewMesh("cube", "assets/models/Cube.obj");
 		root->assetManager.LoadGLTF("assets/models/arena.glb");
 		root->assetManager.AddNewShader("test", "assets/shaders/vert.spv", "assets/shaders/frag.spv");
-		root->assetManager.AddNewMaterial("testMat", "test2", "test");
+		root->assetManager.AddNewMaterial("testMat", "test", "test");
 
         auto v = glm::highp_vec3 (0,0,0);
         auto q = glm::quat(v);
 
         entt::entity camEntity = mRegistry.create();
         Components::Transform* camTransform = &mRegistry.emplace<Components::Transform>(camEntity, glm::vec3(0,0,-10), q, glm::vec3(1,1,1));
-        Components::Camera* cam = &mRegistry.emplace<Components::Camera>(camEntity, (float)root->sdl2.width / root->sdl2.height, glm::quarter_pi<float>(), 0.1f, 100.0f, false, camTransform);
+        Components::Camera* cam = &mRegistry.emplace<Components::Camera>(camEntity, (float)root->sdl2.width / root->sdl2.height, glm::quarter_pi<float>(), 0.1f, 1000.0f, false, camTransform);
         activeCamera = cam;
         
         /*

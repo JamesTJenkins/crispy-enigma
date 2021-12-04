@@ -29,7 +29,7 @@
 namespace VulkanModule {
     struct RenderData {
         Components::MeshRenderer* meshRenderer;
-        glm::mat4* transform;
+        glm::mat4 transform;
     };
 
     class Vulkan {

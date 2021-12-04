@@ -11,6 +11,7 @@
 #define TINYGLTF_USE_CPP14
 
 #include "tiny_gltf.h"
+#include <gtx/matrix_decompose.hpp>
 
 namespace Utilities {
     GLTFLoader::GLTFLoader() {
@@ -184,7 +185,7 @@ namespace Utilities {
 
         // Load all nodes
         std::cout << "Processing GLTF nodes:" << std::endl;
-
+        
         for (auto& node : model->nodes) {
             if (node.mesh != -1) {
                 std::cout << "Found mesh data for object: " << node.name << std::endl;
@@ -193,26 +194,37 @@ namespace Utilities {
 
                 mData.meshName = model->meshes[node.mesh].name;
                 
-                if (node.matrix.size() == 16) {
-                    // If matrix available
-                    mData.transform = Components::Transform(DoubleToMat4(node.matrix));
-                } else {
-                    // Fill with default initially
-                    mData.transform = Components::Transform(glm::vec3(0,0,0), glm::quat(glm::highp_vec3 (0,0,0)), glm::vec3(1,1,1));
+                glm::vec3 translation;
+                glm::quat rotation;
+                glm::vec3 scale;
 
-                    // If there is translation apply it
-                    if (node.translation.size() == 3)
-                        mData.transform.SetPosition(DoubleToVec3(node.translation));
+                bool translation_provided = node.translation.size() >= 3,
+                    rotation_provided = node.rotation.size() >= 4, 
+                    scale_provided = node.scale.size() >= 3,
+                    matrix_provided = node.matrix.size() >= 16;
+
+                if (!matrix_provided) {
                     
-                    // If there is rotation apply it
-                    if (node.rotation.size() == 4)
-                        mData.transform.SetRotation(DoubleToQuat(node.rotation));
+                    if (translation_provided)
+                        translation = DoubleToVec3(node.translation);
+                    else translation = {0,0,0};
 
-                    // If there is scale apply it
-                    if (node.scale.size() == 3)
-                        mData.transform.SetScale(DoubleToVec3(node.scale));
+                    if (rotation_provided)
+                        rotation = DoubleToQuat (node.rotation);
+                    else rotation = {1,0,0,0};
+
+                    if (scale_provided)
+                        scale = DoubleToVec3(node.scale);
+                    else scale = {1,1,1};
+
+                } else {
+                    auto matrix = DoubleToMat4(node.matrix);
+                    glm::vec3 skew;
+                    glm::vec4 perspective;
+                    glm::decompose(matrix, scale, rotation, translation, skew, perspective);
                 }
 
+                mData.transform = Components::Transform(translation, rotation, scale);
                 meshData.push_back(mData);
             }
         }

@@ -87,13 +87,17 @@ CXXFLAGS := ${CXXFLAGS.${COMPILER}} ${CCXFLAGS.includes} ${CCXFLAGS.warning}
 
 LDFLAGS.libraries := $(LIB_PATHS:%=-L%) $(LIB_FILES:%=-l%)
 
+LDFLAGS.gcc.linux := -pthread
+LDFLAGS.gcc.win32 := 
 LDFLAGS.gcc.debug := -fstack-protector -O0
 LDFLAGS.gcc.release := 
-LDFLAGS.gcc := -pthread ${LDFLAGS.gcc.${BUILD}} #-fuse-ld=gold
+LDFLAGS.gcc := ${LDFLAGS.gcc.${SYS}} ${LDFLAGS.gcc.${BUILD}} #-fuse-ld=gold
 
+LDFLAGS.clang.linux := -pthread
+LDFLAGS.clang.win32 := 
 LDFLAGS.clang.debug := -fstack-protector -O0
-LDFLAGS.clang.release :=
-LDFLAGS.clang := ${LDFLAGS.clang.${BUILD}} -fuse-ld=lld
+LDFLAGS.clang.release := 
+LDFLAGS.clang := ${LDFLAGS.clang.${SYS}} ${LDFLAGS.clang.${BUILD}} -fuse-ld=lld
 
 LDFLAGS := -g ${LDFLAGS.${COMPILER}} ${LDFLAGS.libraries}
 # ==== End: Linker flags selection

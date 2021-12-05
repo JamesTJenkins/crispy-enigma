@@ -12,6 +12,7 @@
 
 #include "tiny_gltf.h"
 #include <gtx/matrix_decompose.hpp>
+#include <cstdint>
 
 namespace Utilities {
     GLTFLoader::GLTFLoader() {
@@ -124,11 +125,6 @@ namespace Utilities {
                 const tinygltf::Buffer& colorBuffer = model->buffers[colorBufferView.buffer];
                 const float* colors = reinterpret_cast<const float*>(&colorBuffer.data[colorBufferView.byteOffset + colorAccessor.byteOffset]);
 
-                // Indices
-                const tinygltf::Accessor& indicesAccessor = model->accessors[primitive.indices];
-                const tinygltf::BufferView& indicesBufferView = model->bufferViews[indicesAccessor.bufferView];
-                const tinygltf::Buffer& indicesBuffer = model->buffers[indicesBufferView.buffer];
-                const unsigned short* indices = reinterpret_cast<const unsigned short*>(&indicesBuffer.data[indicesBufferView.byteOffset + indicesAccessor.byteOffset]);
 
                 for (size_t i = 0; i < posAccessor.count; ++i){
                     Data::Vertex vertex {};
@@ -164,11 +160,35 @@ namespace Utilities {
                     sub.vertices.push_back(vertex);
                 }
 
-                sub.indices.resize(indicesAccessor.count);
-                for (size_t i = 1; i < indicesAccessor.count; ++i){
-                    sub.indices[i] = (uint32_t)indices[i];
+                // Indices
+                const tinygltf::Accessor& indicesAccessor = model->accessors[primitive.indices];
+                const tinygltf::BufferView& indicesBufferView = model->bufferViews[indicesAccessor.bufferView];
+                const tinygltf::Buffer& indicesBuffer = model->buffers[indicesBufferView.buffer];
+
+                if (indicesAccessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) {
+                    const unsigned short* indices = reinterpret_cast<const unsigned short*>(&indicesBuffer.data[indicesBufferView.byteOffset + indicesAccessor.byteOffset]);
+                
+                    sub.indices.resize(indicesAccessor.count);
+                    for (size_t i = 0; i < indicesAccessor.count; ++i){
+                        sub.indices[i] = (uint32_t)indices[i];
+                    }
+                } else if (indicesAccessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT) {
+                    const unsigned int* indices = reinterpret_cast<const unsigned int*>(&indicesBuffer.data[indicesBufferView.byteOffset + indicesAccessor.byteOffset]);
+                    
+                    sub.indices.resize(indicesAccessor.count);
+                    for (size_t i = 0; i < indicesAccessor.count; ++i){
+                        sub.indices[i] = (uint32_t)indices[i];
+                    }
+                } else if (indicesAccessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) {
+                    const uint8_t* indices = reinterpret_cast<const uint8_t*>(&indicesBuffer.data[indicesBufferView.byteOffset + indicesAccessor.byteOffset]);
+                    
+                    sub.indices.resize(indicesAccessor.count);
+                    for (size_t i = 0; i < indicesAccessor.count; ++i){
+                        sub.indices[i] = (uint32_t)indices[i];
+                    }
                 }
                 
+                // Add submesh
                 mesh.submeshes.push_back(sub);
             }
 
@@ -233,6 +253,21 @@ namespace Utilities {
         CreateEntities(root, meshData);
     }
 
+    // Entity creation
+
+    void GLTFLoader::CreateEntities(Root* root, std::vector<MeshData> meshData) {
+        // Get current registry
+        entt::registry* reg = root->activeScene.GetRegistry();
+
+        // Create entities
+        for (size_t i = 0; i < meshData.size(); ++i) {
+            entt::entity entity = reg->create();
+            reg->emplace<Components::Transform>(entity, meshData[i].transform);
+            // TODO: make it go off the gltf loader materials
+            reg->emplace<Components::MeshRenderer>(entity, meshData[i].meshName, "testMat");
+        }
+    }
+
     // Conversions from tinygltf double vectors to glm types
 
     glm::vec3 GLTFLoader::DoubleToVec3(std::vector<double> doubles) {
@@ -251,20 +286,6 @@ namespace Utilities {
             doubles[8], doubles[9], doubles[10], doubles[11],
             doubles[12], doubles[13], doubles[14], doubles[15]
         );
-    }
-
-    // Entity creation
-
-    void GLTFLoader::CreateEntities(Root* root, std::vector<MeshData> meshData) {
-        // Get current registry
-        entt::registry* reg = root->activeScene.GetRegistry();
-
-        // Create entities
-        for (size_t i = 0; i < meshData.size(); ++i) {
-            entt::entity entity = reg->create();
-            reg->emplace<Components::Transform>(entity, meshData[i].transform);
-            reg->emplace<Components::MeshRenderer>(entity, meshData[i].meshName, "testMat");
-        }
     }
 
     // Debugging

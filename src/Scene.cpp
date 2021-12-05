@@ -102,7 +102,6 @@ namespace Scenes {
         // TESTING
 		root->assetManager.AddNewTexture("test", "assets/textures/test.jpg", 2);
 		root->assetManager.AddNewTexture("test2", "assets/textures/test2.jpg", 2);
-		//root->assetManager.AddNewMesh("cube", "assets/models/Cube.obj");
 		root->assetManager.LoadGLTF("assets/models/arena.glb");
 		root->assetManager.AddNewShader("test", "assets/shaders/vert.spv", "assets/shaders/frag.spv");
 		root->assetManager.AddNewMaterial("testMat", "test", "test");
@@ -115,10 +114,13 @@ namespace Scenes {
         Components::Camera* cam = &mRegistry.emplace<Components::Camera>(camEntity, (float)root->sdl2.width / root->sdl2.height, glm::quarter_pi<float>(), 0.1f, 1000.0f, false, camTransform);
         activeCamera = cam;
         
-        /*
+        /* CUBE TEST
+		root->assetManager.AddNewMesh("cube", "assets/models/Cube.obj");
+		root->assetManager.AddNewMaterial("testMat2", "test2", "test");
+
         entt::entity entity = mRegistry.create();
         mRegistry.emplace<Components::Transform>(entity, glm::vec3(0,0,0), q, glm::vec3(1,1,1));
-        mRegistry.emplace<Components::MeshRenderer>(entity, "cube", "testMat");
+        mRegistry.emplace<Components::MeshRenderer>(entity, "cube", "testMat2");
         */
 
         // Rebuild

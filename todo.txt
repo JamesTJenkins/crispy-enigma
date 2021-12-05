@@ -1,15 +1,9 @@
 
 TODO:
 
-+ Fix left and right coords as its incorrect
-+ Make meshRenderer components interact with vulkan
-+ Add renderables back when creating meshRenderComponents and set them up when adding the component to an entity or possibly scrap them and replace with just the meshRenderer component setup
 + lighting
 + more materials
 + improve scripts to work with logic loop
-
-Vulkan Notes:
-Setup VMats to be materials, rather than just shader pipelines (possibly rename to VShaders? and have that referenced by VMats?)
 
 Object manager notes:
 Could switch from sting ids to hashed string ids, so still input readable and memorable ids but not lose out on a small amount of performance
@@ -17,23 +11,4 @@ Could switch from sting ids to hashed string ids, so still input readable and me
 Loaders
 
 modify .obj to handle larger .obj files, as errors out with very dense meshes
-modify GLTF loader to handle .gltf as well as .glb, and allow the data to be used as it is just loaded and not used
-
-Scenes and vulkan
-
-+ Scenes add to vector with meshRenderComponents (done, RenderData)
-+ Sort the vector to load in order based off shader, possibly vector of a vector, each vector is a list based off the shader, should make creation of command buffer easier (Done, bufferObjects)
-+ Bring back the original create command buffer and retrofit (Done)
-
-Done things:
-
-+ Seperate camera object rather than the one made inside the Vulkan.cpp somewhere
-+ Add new texture, mesh, and shader loading back as i removed the previous implimentation
-+ fix vulkan descriptors as textures currently are commented out
-+ fix vulkan pipeline cleanup as its throwing seg fault on launch (cause of framebuffer resized) and close
-+ Add all the cleanups to vulkan parts (done)
-+ Create basic components (done)
-+ vulkan cleanup/Rewrite (done)
-+ Vulkan - (done, but needs further testing with when transforms exist)
-+ Setup component system - (Done, entt covers it)
-+ Do licencing (Done)
+allow meshes to be completely loaded with all required data in gltfLoader

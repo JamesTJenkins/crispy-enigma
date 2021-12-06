@@ -5,6 +5,7 @@
 #include "Mesh.h"
 
 namespace VulkanModule {
+
     VulkanUniformBuffer::VulkanUniformBuffer(Root* _root, VulkanDevice* device, VulkanSwapchain* swapchain, VulkanBuffer* buffer) : root(_root), vDevice(device), vSwapchain(swapchain), vBuffer(buffer) {
 
     }
@@ -14,7 +15,7 @@ namespace VulkanModule {
     }
 
     void VulkanUniformBuffer::CreateUniformBuffers() {
-        VkDeviceSize bufferSize = sizeof(Data::UniformBufferObject);
+        VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
         uniformBuffers.resize(vSwapchain->swapchainImages.size());
         uniformBuffersMemory.resize(vSwapchain->swapchainImages.size());
@@ -26,15 +27,19 @@ namespace VulkanModule {
 
     void VulkanUniformBuffer::UpdateUniformBuffer(uint32_t currentImage) {
         // Modify ubo here
-        Data::UniformBufferObject ubo {};
+        UniformBufferObject ubo {};
         
         // Set to camera view settings
         ubo.view = root->activeScene.activeCamera->GetViewMatrix();
         // Set to camera projection setttings
         ubo.proj = root->activeScene.activeCamera->GetProjectionMatrix();
-        
-        // Flip Y coord as its wrong in vulkan
-        //ubo.proj[1][1] *= -1;
+        // Set to cameras position
+        ubo.viewPosition = root->activeScene.activeCamera->transformComponent->GetPosition();
+
+        // Set lighting data
+        std::vector<Components::LightData> l = GetLights();
+        ubo.lights = l.data();
+        ubo.numLights = l.size();
 
         // Copy data into buffer
         void* data;
@@ -48,5 +53,28 @@ namespace VulkanModule {
             vkDestroyBuffer(vDevice->device, uniformBuffers[i], nullptr);
             vkFreeMemory(vDevice->device, uniformBuffersMemory[i], nullptr);
         }
+    }
+
+    std::vector<Components::LightData> VulkanUniformBuffer::GetLights() {
+        std::vector<Components::LightData> importantLights;
+
+        // Gets important lights
+
+        // Get all directional lights
+        for (size_t i = 0; i < root->lights[Components::DIRECTIONAL].size(); i++) {
+            // Make sure to not go over the defined maximum
+            if (i > MAX_NUM_LIGHTS - 1)
+                return importantLights;
+
+            Components::Light* light = root->lights[Components::DIRECTIONAL][i];
+
+            Components::LightData data(glm::vec4(light->position, light->lightType), light->color, light->radius);
+            importantLights.push_back(data);
+        }
+        
+        // Process all point lights
+        
+        // Return
+        return importantLights;
     }
 }

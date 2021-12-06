@@ -152,7 +152,7 @@ namespace VulkanModule {
             VkDescriptorBufferInfo bufferInfo {};
             bufferInfo.buffer = vUniformbuffer->uniformBuffers[i];
             bufferInfo.offset = 0;
-            bufferInfo.range = sizeof(Data::UniformBufferObject);
+            bufferInfo.range = sizeof(VulkanModule::UniformBufferObject);
 
             descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrites[0].dstSet = descriptorSets[i];

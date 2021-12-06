@@ -71,8 +71,7 @@ namespace VulkanModule {
 
                 for (auto& obj : rd.second) {
                     // Create push constants
-                    PushConstants constants;
-                    constants.model = obj.transform;
+                    PushConstants constants = CreatePushConstants(obj);
 
                     for (auto& submesh : root->assetManager.loadedMeshes[obj.meshRenderer->meshRef].submeshes) {
                         // Bind vertex and index buffer
@@ -137,9 +136,7 @@ namespace VulkanModule {
 
             for (auto& obj : rd.second) {
                 // Create push constants
-                PushConstants constants;
-                constants.model = obj.transform;
-                constants.texId = root->assetManager.loadedTextures[root->assetManager.loadedMaterials[obj.meshRenderer->materialRef].texture].textureId;
+                PushConstants constants = CreatePushConstants(obj);
 
                 for (auto& submesh : root->assetManager.loadedMeshes[obj.meshRenderer->meshRef].submeshes) {
                     // Bind vertex and index buffer
@@ -207,6 +204,16 @@ namespace VulkanModule {
 
         // Clear command buffer
         vkFreeCommandBuffers(vDevice->device, commandPool, 1, &commandBuffer);
+    }
+
+    PushConstants VulkanCommand::CreatePushConstants(RenderData renderData) {
+        PushConstants constants;
+        constants.model = renderData.transform;
+        constants.texId = root->assetManager.loadedTextures[root->assetManager.loadedMaterials[renderData.meshRenderer->materialRef].texture].textureId;
+        constants.specular = root->assetManager.loadedMaterials[renderData.meshRenderer->materialRef].specular;
+        constants.shininess = root->assetManager.loadedMaterials[renderData.meshRenderer->materialRef].shininess;
+
+        return constants;
     }
 
     void VulkanCommand::ClearCommandBuffers() {

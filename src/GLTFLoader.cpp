@@ -125,7 +125,6 @@ namespace Utilities {
                 const tinygltf::Buffer& colorBuffer = model->buffers[colorBufferView.buffer];
                 const float* colors = reinterpret_cast<const float*>(&colorBuffer.data[colorBufferView.byteOffset + colorAccessor.byteOffset]);
 
-
                 for (size_t i = 0; i < posAccessor.count; ++i){
                     Data::Vertex vertex {};
 

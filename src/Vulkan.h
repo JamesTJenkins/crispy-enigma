@@ -20,18 +20,11 @@
 #include "VulkanSync.h"
 #include "VulkanPipeline.h"
 
-#include "MeshRenderer.h"
-
 /*
     Where all the parts of my vulkan implementation come together
 */
 
 namespace VulkanModule {
-    struct RenderData {
-        Components::MeshRenderer* meshRenderer;
-        glm::mat4 transform;
-    };
-
     class Vulkan {
     private:
         // This is all done first as it requires to be initalized first

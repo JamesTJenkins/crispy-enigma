@@ -6,8 +6,26 @@
 #include "VulkanDevice.h"
 #include "VulkanSwapchain.h"
 #include "VulkanBuffer.h"
+#include "Light.h"
+
+#define MAX_NUM_LIGHTS 8
 
 namespace VulkanModule {
+
+    struct UniformBufferObject {
+        // Camera
+        glm::mat4 view;
+        glm::mat4 proj;
+        glm::vec3 viewPosition;
+        // Lights
+        Components::LightData* lights;
+        int numLights;
+    };
+
+    struct DynamicBufferObject {
+        glm::mat4* model;
+    };
+
     class VulkanUniformBuffer {
     public:
         // Constructors
@@ -26,6 +44,8 @@ namespace VulkanModule {
         std::vector<VkBuffer> uniformBuffers;
         std::vector<VkDeviceMemory> uniformBuffersMemory;
     private:
+        std::vector<Components::LightData> GetLights();
+
         // References
         Root* root;
         VulkanDevice* vDevice;

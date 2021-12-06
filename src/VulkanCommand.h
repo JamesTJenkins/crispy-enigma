@@ -7,6 +7,8 @@
 #include "VulkanSwapchain.h"
 #include "VulkanRenderPass.h"
 #include "VulkanFrameBuffer.h"
+#include "PushConstants.h"
+#include "RenderData.h"
 
 namespace VulkanModule {
     class VulkanCommand {
@@ -25,6 +27,8 @@ namespace VulkanModule {
         VkCommandBuffer BeginSingleTimeCommands();
         // End single time commands
         void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
+        // Create push constants
+        PushConstants CreatePushConstants(RenderData renderData);
 
         // Cleanup
         void ClearCommandBuffers();

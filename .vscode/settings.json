@@ -87,6 +87,8 @@
         "stack": "cpp",
         "shared_mutex": "cpp",
         "forward_list": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp"
     }
 }

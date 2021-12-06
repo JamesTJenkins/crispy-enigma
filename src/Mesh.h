@@ -25,15 +25,6 @@ namespace Data {
         }
     };
 
-    struct UniformBufferObject {
-        glm::mat4 view;
-        glm::mat4 proj;
-    };
-
-    struct DynamicBufferObject {
-        glm::mat4* model;
-    };
-
     struct SubMesh {
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;

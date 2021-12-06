@@ -3,6 +3,12 @@
 
 #include "Root.h"
 
+/*
+
+        This needs some cleanup at somepoint to remove redundant code
+
+*/
+
 namespace VulkanModule {
     VulkanDescriptor::VulkanDescriptor(Root* _root, VulkanDevice* device, VulkanSwapchain* swapchain, VulkanUniformBuffer* uniformbuffer) : root(_root), vDevice(device), vSwapchain(swapchain), vUniformbuffer(uniformbuffer) {
 
@@ -23,7 +29,7 @@ namespace VulkanModule {
         // Used for image sampling descriptors
         uboLayoutBinding.pImmutableSamplers = nullptr;
         // Which shader stage the descriptor gets referenced
-        uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 
         // Sampler
         VkDescriptorSetLayoutBinding samplerLayoutBinding {};
@@ -61,7 +67,7 @@ namespace VulkanModule {
         // Used for image sampling descriptors
         uboLayoutBinding.pImmutableSamplers = nullptr;
         // Which shader stage the descriptor gets referenced
-        uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 
         // Sampler
         VkDescriptorSetLayoutBinding samplerLayoutBinding {};

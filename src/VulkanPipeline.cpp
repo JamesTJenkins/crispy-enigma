@@ -155,7 +155,7 @@ namespace VulkanModule {
         // Size of the push constant
         push_constant.size = sizeof(PushConstants);
         // Set to only be accessed in vert shader
-        push_constant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        push_constant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 
 		// Pipeline Layout
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};

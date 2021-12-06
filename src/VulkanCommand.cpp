@@ -85,7 +85,7 @@ namespace VulkanModule {
 
 
                         // Upload push constants
-                        vkCmdPushConstants(commandBuffers[i], root->assetManager.loadedShaders[rd.first].pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstants), &constants);
+                        vkCmdPushConstants(commandBuffers[i], root->assetManager.loadedShaders[rd.first].pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstants), &constants);
 
                         // Draw
                         vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(submesh.indices.size()), 1, 0, 0, 0);
@@ -151,7 +151,7 @@ namespace VulkanModule {
                     vkCmdBindDescriptorSets(commandBuffers[imageIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, root->assetManager.loadedShaders[rd.first].pipelineLayout, 0, 1, &descriptorSets[imageIndex], 0, nullptr);
 
                     // Upload push constants
-                    vkCmdPushConstants(commandBuffers[imageIndex], root->assetManager.loadedShaders[rd.first].pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushConstants), &constants);
+                    vkCmdPushConstants(commandBuffers[imageIndex], root->assetManager.loadedShaders[rd.first].pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstants), &constants);
 
                     // Draw
                     vkCmdDrawIndexed(commandBuffers[imageIndex], static_cast<uint32_t>(submesh.indices.size()), 1, 0, 0, 0);

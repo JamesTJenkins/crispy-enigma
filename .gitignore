@@ -5,6 +5,5 @@ Debug/*
 ArchivedScripts/*
 assets/textures/*
 assets/models/*
-assets/shaders/compile.bat
 
 gmon.out

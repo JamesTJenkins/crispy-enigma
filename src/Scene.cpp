@@ -21,6 +21,7 @@ namespace Scenes {
         static auto startTime = std::chrono::high_resolution_clock::now();
         auto currTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currTime - startTime).count();
+        startTime = currTime;
 
         /*
         for (auto entity : view) {
@@ -35,21 +36,21 @@ namespace Scenes {
 
         // Update camera pos
         if (root->inputManager.GetKeyState(SDL_SCANCODE_W)){
-            cam->SetPosition(cam->GetPosition() + (time * cam->Forward()) * 0.001f);
+            cam->SetPosition(cam->GetPosition() + (time * cam->Forward()) * 9.0f);
         } else if (root->inputManager.GetKeyState(SDL_SCANCODE_S)){
-            cam->SetPosition(cam->GetPosition() + (time * cam->Backward()) * 0.001f);
+            cam->SetPosition(cam->GetPosition() + (time * cam->Backward()) * 9.0f);
         }
 
         if (root->inputManager.GetKeyState(SDL_SCANCODE_A)){
-            cam->SetPosition(cam->GetPosition() + (time * cam->Left()) * 0.001f);
+            cam->SetPosition(cam->GetPosition() + (time * cam->Left()) * 9.0f);
         } else if (root->inputManager.GetKeyState(SDL_SCANCODE_D)){
-            cam->SetPosition(cam->GetPosition() + (time * cam->Right()) * 0.001f);
+            cam->SetPosition(cam->GetPosition() + (time * cam->Right()) * 9.0f);
         }
 
         if (root->inputManager.GetKeyState(SDL_SCANCODE_SPACE)){
-            cam->SetPosition(cam->GetPosition() + (time * cam->Up()) * 0.001f);
+            cam->SetPosition(cam->GetPosition() + (time * cam->Up()) * 9.0f);
         } else if (root->inputManager.GetKeyState(SDL_SCANCODE_LCTRL)){
-            cam->SetPosition(cam->GetPosition() + (time * cam->Down()) * 0.001f);
+            cam->SetPosition(cam->GetPosition() + (time * cam->Down()) * 9.0f);
         }
         
         static int prevMouseX = 0;
@@ -57,20 +58,23 @@ namespace Scenes {
         int mouseX = root->inputManager.GetMouseX();
         int mouseY = root->inputManager.GetMouseY();
 
-        if (mouseX > prevMouseX) {
+
+        float deltaX = (mouseX - prevMouseX) * 9.0f;
+        if (deltaX > 0.0f) {
             // Right
-            cam->Rotate(time * 0.1f * glm::radians(-1.0f), glm::vec3(0,1,0));
-        } else if (mouseX < prevMouseX) {
+            cam->Rotate(time * deltaX, glm::vec3(0,-1,0));
+        } else if (deltaX < 0.0f) {
             // Left
-            cam->Rotate(time * 0.1f * glm::radians(1.0f), glm::vec3(0,1,0));
+            cam->Rotate(time * deltaX, glm::vec3(0,-1,0));
         }
 
-        if (mouseY > prevMouseY) {
+        float deltaY = (mouseY - prevMouseY) * 9.0f;
+        if (deltaY > 0.0f) {
             // Up
-            cam->Rotate(time * 0.1f * glm::radians(-1.0f), cam->Right());
-        } else if (mouseY < prevMouseY) {
+            cam->Rotate(time * deltaY, cam->Left());
+        } else if (deltaY < 0.0f) {
             // Down
-            cam->Rotate(time * 0.1f * glm::radians(1.0f), cam->Right());
+            cam->Rotate(time * deltaY, cam->Left());
         }
 
         prevMouseX = mouseX;

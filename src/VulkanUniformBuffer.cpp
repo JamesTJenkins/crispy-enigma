@@ -28,7 +28,7 @@ namespace VulkanModule {
     void VulkanUniformBuffer::UpdateUniformBuffer(uint32_t currentImage) {
         // Modify ubo here
         UniformBufferObject ubo {};
-        
+
         // Set to camera view settings
         ubo.view = root->activeScene.activeCamera->GetViewMatrix();
         // Set to camera projection setttings
@@ -37,8 +37,17 @@ namespace VulkanModule {
         ubo.viewPosition = root->activeScene.activeCamera->transformComponent->GetPosition();
 
         // Set lighting data
+        //ubo.ambient = glm::vec3(0.5f, 0.5f, 0.5f);
+
+        // Get the lights
         std::vector<Components::LightData> l = GetLights();
-        ubo.lights = l.data();
+
+        // Copy the lights in
+        for (size_t i = 0; i < l.size(); ++i) {
+            ubo.lights[i] = l[i];
+        }
+
+        // Set the amount of light
         ubo.numLights = l.size();
 
         // Copy data into buffer

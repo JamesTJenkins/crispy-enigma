@@ -64,6 +64,9 @@ namespace VulkanModule {
             throw std::runtime_error("Failed to aquire swapchain image.");
         }
 
+        // Update uniform buffer
+        vUniformBuffer.UpdateUniformBuffer(imageIndex);
+
         // Check if previous frame is still using this image
         if (vSync.imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(vDevice.device, 1, &vSync.imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
@@ -71,9 +74,6 @@ namespace VulkanModule {
 
         // Mark the image as now being used by this frame
         vSync.imagesInFlight[imageIndex] = vSync.inFlightFences[currentFrame];
-
-        // Update uniform buffer
-        vUniformBuffer.UpdateUniformBuffer(imageIndex);
 
         // Submit the command buffer and sync
         VkSubmitInfo submitInfo {};

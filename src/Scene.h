@@ -12,6 +12,7 @@ namespace Scenes {
         void UpdateScene();
 
         void CreateAllRenderData();
+        void UpdateLightData();
         void DrawMeshes();
 
         void LoadData();

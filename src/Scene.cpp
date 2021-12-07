@@ -94,6 +94,17 @@ namespace Scenes {
         root->vulkan.BuildSwapchain();
     }
 
+    void Scene::UpdateLightData() {
+        root->lights.clear();
+        auto view = mRegistry.view<Components::Light>();
+        
+        // Get all lights and sort them based off type
+        for (auto entity : view) {
+            Components::Light* light = &mRegistry.get<Components::Light>(entity);
+            root->lights[light->lightType].push_back(light);
+        }
+    }
+
     void Scene::LoadData(){
         // Clear all data before loading more
         root->assetManager.ClearAssetData();
@@ -104,16 +115,22 @@ namespace Scenes {
 		root->assetManager.AddNewTexture("test2", "assets/textures/test2.jpg", 2);
 		root->assetManager.LoadGLTF("assets/models/arena.glb");
 		root->assetManager.AddNewShader("test", "assets/shaders/vert.spv", "assets/shaders/frag.spv");
-		root->assetManager.AddNewMaterial("testMat", "test", "test");
+		root->assetManager.AddNewMaterial("testMat", "test", 0.0f, 16.0f, "test");
 
+        // Default values
         auto v = glm::highp_vec3 (0,0,0);
         auto q = glm::quat(v);
 
+        // Camera
         entt::entity camEntity = mRegistry.create();
         Components::Transform* camTransform = &mRegistry.emplace<Components::Transform>(camEntity, glm::vec3(0,0,-10), q, glm::vec3(1,1,1));
         Components::Camera* cam = &mRegistry.emplace<Components::Camera>(camEntity, (float)root->sdl2.width / root->sdl2.height, glm::quarter_pi<float>(), 0.1f, 1000.0f, false, camTransform);
         activeCamera = cam;
         
+        // Light
+        entt::entity lightEntity = mRegistry.create();
+        mRegistry.emplace<Components::Light>(lightEntity, Components::DIRECTIONAL, glm::vec3(0,10,0), glm::vec3(1,1,1), 10);
+
         /* CUBE TEST
 		root->assetManager.AddNewMesh("cube", "assets/models/Cube.obj");
 		root->assetManager.AddNewMaterial("testMat2", "test2", "test");
@@ -126,6 +143,8 @@ namespace Scenes {
         // Rebuild
         // Create all renderdata
         CreateAllRenderData();
+        // Update lighting
+        UpdateLightData();
         // Print off stats
         PrintLoadedDataStats();
     }

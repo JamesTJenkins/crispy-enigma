@@ -18,8 +18,9 @@ namespace VulkanModule {
         glm::mat4 proj;
         glm::vec3 viewPosition;
         // Lights
-        Components::LightData* lights;
+        //glm::vec3 ambient;
         int numLights;
+        Components::LightData lights[MAX_NUM_LIGHTS];
     };
 
     struct DynamicBufferObject {

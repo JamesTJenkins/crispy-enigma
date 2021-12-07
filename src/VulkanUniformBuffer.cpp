@@ -37,7 +37,7 @@ namespace VulkanModule {
         ubo.viewPosition = root->activeScene.activeCamera->transformComponent->GetPosition();
 
         // Set lighting data
-        //ubo.ambient = glm::vec3(0.5f, 0.5f, 0.5f);
+        ubo.ambient = glm::vec3(0.5f, 0.5f, 0.5f);
 
         // Get the lights
         std::vector<Components::LightData> l = GetLights();

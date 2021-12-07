@@ -37,7 +37,7 @@ layout(location = 0) out vec4 outColor;
 
 void main(){
     vec4 albedo = texture(texSampler[pushConstants.texId], fragTexCoord0);
-    vec3 finalColor = albedo.rgb * vec3(0.5, 0.5, 0.5);// * ubo.ambient;
+    vec3 finalColor = albedo.rgb * ubo.ambient;
 
     for (int i = 0; i < ubo.numLights; ++i) {
         vec3 L = ubo.lights[i].position.xyz - fragPosition; // Fragment to Light vector

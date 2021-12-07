@@ -16,9 +16,9 @@ namespace VulkanModule {
         // Camera
         glm::mat4 view;
         glm::mat4 proj;
-        glm::vec3 viewPosition;
+        alignas(16) glm::vec3 viewPosition;
         // Lights
-        //glm::vec3 ambient;
+        alignas(16) glm::vec3 ambient;
         int numLights;
         Components::LightData lights[MAX_NUM_LIGHTS];
     };

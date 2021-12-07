@@ -21,7 +21,7 @@ namespace Manager {
         // Functions
         void AddNewTexture(std::string name, std::string path, uint32_t mipLevels);
         void AddNewShader(std::string name, std::string vertexShaderPath, std::string fragmentShaderPath);
-        void AddNewMaterial(std::string name, std::string textureName, std::string shaderName);
+        void AddNewMaterial(std::string name, std::string textureName, const float specular, const float shininess, std::string shaderName);
         void AddNewMesh(std::string name, std::string path);
         void LoadGLTF(std::string name);
 

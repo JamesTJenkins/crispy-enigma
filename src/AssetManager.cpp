@@ -40,10 +40,12 @@ namespace Manager {
         loadedShaders[name] = shader;
     }
 
-    void AssetManager::AddNewMaterial(std::string name, std::string textureName, std::string shaderName) {
+    void AssetManager::AddNewMaterial(std::string name, std::string textureName, const float specular, const float shininess, std::string shaderName) {
         Data::Material mat;
         mat.texture = textureName;
         mat.shader = shaderName;
+        mat.specular = specular;
+        mat.shininess = shininess;
 
         loadedMaterials[name] = mat;
     }

@@ -32,6 +32,9 @@ namespace Data {
 
     struct Material {
         std::string texture;
+        float specular;
+        float shininess;
+
         std::string shader;
     };
 }

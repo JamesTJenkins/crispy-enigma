@@ -119,7 +119,7 @@ namespace Scenes {
 		root->assetManager.AddNewTexture("test2", "assets/textures/test2.jpg", 2);
 		root->assetManager.LoadGLTF("assets/models/arena.glb");
 		root->assetManager.AddNewShader("test", "assets/shaders/vert.spv", "assets/shaders/frag.spv");
-		root->assetManager.AddNewMaterial("testMat", "test", 0.0f, 16.0f, "test");
+		root->assetManager.AddNewMaterial("testMat", "test2", 0.0f, 16.0f, "test");
 
         // Default values
         auto v = glm::highp_vec3 (0,0,0);
@@ -133,7 +133,10 @@ namespace Scenes {
         
         // Light
         entt::entity lightEntity = mRegistry.create();
-        mRegistry.emplace<Components::Light>(lightEntity, Components::DIRECTIONAL, glm::vec3(0,10,0), glm::vec3(1,1,1), 10);
+        mRegistry.emplace<Components::Light>(lightEntity, Components::DIRECTIONAL, glm::vec3(0,-1,0), glm::vec3(1,0,0), 50);
+
+        entt::entity lightEntity2 = mRegistry.create();
+        mRegistry.emplace<Components::Light>(lightEntity2, Components::POINT, glm::vec3(0,5,0), glm::vec3(0,0,1), 10);
 
         /* CUBE TEST
 		root->assetManager.AddNewMesh("cube", "assets/models/Cube.obj");

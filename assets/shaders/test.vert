@@ -30,5 +30,5 @@ void main(){
 	fragColor = inColor;
 	fragTexCoord0 = inTexCoord0;
     fragTexCoord1 = inTexCoord1;
-    fragPosition = vec3(pos.x, pos.y, pos.z);
+    fragPosition = (pushConstants.model * vec4(inPosition, 1.0)).xyz;
 }

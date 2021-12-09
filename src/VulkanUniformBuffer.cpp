@@ -82,7 +82,17 @@ namespace VulkanModule {
         }
         
         // Process all point lights
-        
+        for (size_t i = 0; i < root->lights[Components::POINT].size(); i++) {
+            // Make sure to not go over the defined maximum
+            if (i > MAX_NUM_LIGHTS - 1)
+                return importantLights;
+
+            Components::Light* light = root->lights[Components::POINT][i];
+
+            Components::LightData data(glm::vec4(light->position, light->lightType), light->color, light->radius);
+            importantLights.push_back(data);
+        }
+
         // Return
         return importantLights;
     }

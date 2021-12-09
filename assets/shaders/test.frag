@@ -35,7 +35,62 @@ layout(location = 4) in vec3 fragPosition;
 
 layout(location = 0) out vec4 outColor;
 
+vec3 CalculateLight(Light light, vec3 viewDir, vec3 normal, vec3 albedo) {
+    if (light.position.w == 0.0) {
+        // If directional light
+        vec3 lightDir = normalize(-light.position.xyz);
+        // Diffuse
+        float diff = max(dot(normal, lightDir), 0.0);
+        // Specular
+        vec3 reflectDir = reflect(-lightDir, normal);
+        float spec = pow(max(dot(viewDir, reflectDir), 0.0), pushConstants.shininess);
+        // Combine
+        vec3 ambient = ubo.ambient * albedo;
+        vec3 diffuse = light.color * diff * albedo;
+        vec3 specular = pushConstants.specular * spec * albedo;
+        
+        return (ambient + diffuse + specular);
+    } else {
+        // If point light
+        vec3 lightDir = light.position.xyz - fragPosition; // Fragment to Light vector
+        float sqrDistance = dot(lightDir, lightDir); // Fragment to Light square distance
+        lightDir = normalize(lightDir);
+        vec3 V = normalize(ubo.viewPosition - fragPosition); // Fragment to Viewer normal
+        // Attenuation
+        float attenuation = light.radius / (sqrDistance + 1.0);
+
+        // Diffuse
+        float diff = max(dot(normal, lightDir), 0.0);
+        // Specular
+        vec3 reflectDir = reflect(-lightDir, normal);
+        float spec = pow(max(dot(viewDir, reflectDir), 0.0), pushConstants.shininess);
+
+        // Combine
+        vec3 ambient = ubo.ambient * albedo;
+        vec3 diffuse = light.color * diff * albedo;
+        vec3 specular = pushConstants.specular * spec * albedo;
+
+        ambient *= attenuation;
+        diffuse *= attenuation;
+        specular *= attenuation;
+        
+        return (ambient + diffuse + specular);
+    }
+}
+
 void main(){
+    vec4 albedo = texture(texSampler[pushConstants.texId], fragTexCoord0);
+    vec3 viewDir = normalize(fragPosition.xyz - ubo.viewPosition);
+    vec3 normal = normalize(vertNormal);
+    vec3 finalColor = vec3(0,0,0);
+
+    for (int i = 0; i < ubo.numLights; ++i) {
+        finalColor += CalculateLight(ubo.lights[i], viewDir, normal, albedo.rgb);
+    }
+
+    outColor = vec4(finalColor, 1);
+
+    /* OLD
     vec4 albedo = texture(texSampler[pushConstants.texId], fragTexCoord0);
     vec3 finalColor = albedo.rgb * ubo.ambient;
 
@@ -57,4 +112,5 @@ void main(){
     }
 
     outColor = vec4(finalColor, 1);
+    */
 }

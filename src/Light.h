@@ -2,7 +2,7 @@
 #include "Transform.h"
 
 namespace Components {
-    enum LightType { DIRECTIONAL, POINT };
+    enum LightType { DIRECTIONAL = 0, POINT = 1 };
 
     struct Light {
     public:
@@ -21,7 +21,7 @@ namespace Components {
         LightData(const glm::vec4 vector = glm::vec4(0,0,0,0), const glm::vec3 color = glm::vec3(0,0,0), const float radius = 0.0f);
 
         glm::vec4 position;
-        glm::vec3 color;
+        alignas(16) glm::vec3 color;
         float radius;
     };
 }
